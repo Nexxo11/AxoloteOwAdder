@@ -6,6 +6,7 @@ It uses a DearPyGui-based graphical user interface (GUI)
 
 - Insert and configure overworld events in 2 secs
 - Easy to use
+- Expansion compatible version 1.9.0
 
 - Python 3.x
 - Python libraries: 'tkinter', 'dearpygui', 'configparser'
