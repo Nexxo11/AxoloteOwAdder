@@ -28,6 +28,8 @@ It uses a DearPyGui-based graphical user interface (GUI)
 
     Save the changes to event_objects.h.
 
+4. Paste your indexed (16 colors) overworld sprite into the graphics/object_events/people/ directory.
+
 3. Run AxoloteOwAdder:
     Execute the tool and select your Pokeemerald-expansion directory. 
     The tool will be ready to use.
