@@ -19,10 +19,14 @@ def select_folder():
         config['pkmn_ex_path']['path'] = folder_selected
         config['pkmn_ex_path']['info_pointers_index'] = str(info_pointers_index)
         
-        with open('path.ini', 'w') as configfile:
-            config.write(configfile)
-        
-        dpg.set_value("folder_path_text", f"Selected Path: {folder_selected}")
+        try:
+            with open('path.ini', 'w') as configfile:
+                config.write(configfile)
+            dpg.set_value("folder_path_text", f"Selected Path: {folder_selected}")
+        except PermissionError:
+            print("Permission denied: 'path.ini'. Please check the file permissions or run the program as an administrator.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
 def insert_after_line(filename, search_text, insert_text):
     with open(filename, 'r') as f:
@@ -57,11 +61,14 @@ def insert_overworld(overworld_name, overworld_id, palette_id, width, height, re
     pic_tables_file = f"{base_path}/src/data/object_events/object_event_pic_tables.h"
     graphics_info_file = f"{base_path}/src/data/object_events/object_event_graphics_info.h"
     pointers_file = f"{base_path}/src/data/object_events/object_event_graphics_info_pointers.h"
-    event_object_file = f"{base_path}/include/constants/event_objects.h"
     movement_file = f"{base_path}/src/event_object_movement.c"
     spritesheet_rules_file = f"{base_path}/spritesheet_rules.mk"
 
-    insert_after_line_number(defines_file, 244, f'#define OBJ_EVENT_GFX_{overworld_name.upper()} {overworld_id}')
+    #insert_after_line_number(defines_file, 244, f'#define OBJ_EVENT_GFX_{overworld_name.upper()} {overworld_id}')
+    #insert_after_line_number(defines_file, event_object_pal, f'#define OBJ_EVENT_PAL_TAG_{overworld_name.upper()} {hex(palette_id)}')
+    with open(defines_file, 'a') as f:
+        f.write(f'#define OBJ_EVENT_GFX_{overworld_name.upper()} {overworld_id}\n')
+        f.write(f"#define OBJ_EVENT_PAL_TAG_{overworld_name.upper()} {hex(palette_id)}\n")
 
     with open(object_events_file, 'a') as f:
         f.write(f'const u16 gObjectEventPal_{overworld_name}[] = INCBIN_U16("graphics/object_events/pics/people/{overworld_name}.gbapal");\n')
@@ -95,8 +102,6 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_{overworld_name} =
 
     insert_after_line_number(pointers_file, 0, f'extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_{overworld_name};')
     insert_after_line_number(pointers_file, info_pointers_index, f'\t[OBJ_EVENT_GFX_{overworld_name.upper()}] = &gObjectEventGraphicsInfo_{overworld_name},')
-
-    insert_after_line_number(event_object_file, 377, f'#define OBJ_EVENT_PAL_TAG_{overworld_name.upper()} {hex(palette_id)}')
     insert_after_line_number(movement_file, 473, f'\t{{gObjectEventPal_{overworld_name}, OBJ_EVENT_PAL_TAG_{overworld_name.upper()}}},')
 
     with open(spritesheet_rules_file, 'a') as f:
