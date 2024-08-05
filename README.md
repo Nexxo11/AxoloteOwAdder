@@ -4,6 +4,8 @@
 Is a tool for adding and configuring overworld events in the Pokeemerald-expansion project.
 It uses a DearPyGui-based graphical user interface (GUI)
 
+![image](https://github.com/user-attachments/assets/95d1c0cf-07ba-4879-b260-f067c62bb7b6)
+
 - Insert and configure overworld events in 2 secs
 - Easy to use
 - Expansion compatible version 1.9.0
