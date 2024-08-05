@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/dd4b63e2-ff58-4da4-815b-44b23509e679)# AxoloteOwAdder
+# AxoloteOwAdder
 # Version 0.2
 
 Is a tool for adding and configuring overworld events in the Pokeemerald-expansion project.
