@@ -30,12 +30,13 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=620, heigh
     dpg.add_text("Compatible expansion version: 1.9.0")
 
 
-with dpg.window(tag="test", label="Test", width=620, height=460, pos=(630, 0)):
+#with dpg.window(tag="test", label="Test", width=620, height=460, pos=(630, 0)):
+    #dpg.add_text("Compatible expansion version: 1.9.0")
 
-    dpg.add_text("Compatible expansion version: 1.9.0")
 
-
-dpg.create_viewport(title='AxoloteOwAdder', width=1280, height=720, resizable=True)
+#dpg.create_viewport(title='AxoloteOwAdder', width=1280, height=720, resizable=True)
+dpg.create_viewport(title='AxoloteOwAdder', width=620, height=460, resizable=False)
+dpg.set_primary_window("primary_window", True)
 dpg.setup_dearpygui()
 dpg.show_viewport()
 dpg.start_dearpygui()

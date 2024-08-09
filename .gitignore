@@ -2,3 +2,5 @@
 *.ini
 *.exe
 _internal/
+src/__pycache__/
+/src/__pycache__
