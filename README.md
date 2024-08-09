@@ -15,21 +15,19 @@ It uses a DearPyGui-based graphical user interface (GUI)
 
 ## Installation
 
-1. Clone the repository:
-    git clone https://github.com/Nexxo11/AxoloteOwAdder.git
-    
-2. Edit event_objects.h:
-    To use more overworlds, you need to adjust the NUM_OBJ_EVENT_GFX value. Follow these steps:
+1. Download the Latest Release
+    [Download from GitHub Releases](https://github.com/Nexxo11/AxoloteOwAdder/releases)
 
-    Go to include/constants/event_objects.h and locate the line:
-    #define NUM_OBJ_EVENT_GFX 241
-
+3. Edit event_objects.h
+    To support more overworlds, you need to adjust the NUM_OBJ_EVENT_GFX value:
+    Open include/constants/event_objects.h.
+    Locate the line: #define NUM_OBJ_EVENT_GFX 241.
     Change 241 to the new number required for your Pokeemerald expansion.
+    Save the changes to event_objects.h
 
-    Save the changes to event_objects.h.
+3. Prepare Your Overworld Sprite
+    Paste your indexed (16 colors) overworld sprite into the graphics/object_events/people/ directory.
 
-4. Paste your indexed (16 colors) overworld sprite into the graphics/object_events/people/ directory.
-
-3. Run AxoloteOwAdder:
-    Execute the tool and select your Pokeemerald-expansion directory. 
+5. Run AxoloteOwAdder
+    Execute the tool and select your Pokeemerald-expansion directory.
     The tool will be ready to use.
