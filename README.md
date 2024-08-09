@@ -17,6 +17,7 @@ It uses a DearPyGui-based graphical user interface (GUI)
 
 1. Download the Latest Release
     [Download from GitHub Releases](https://github.com/Nexxo11/AxoloteOwAdder/releases)
+   False Virus Positive (pyinstaller)
 
 3. Edit event_objects.h
     To support more overworlds, you need to adjust the NUM_OBJ_EVENT_GFX value:
