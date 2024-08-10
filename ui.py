@@ -146,7 +146,7 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=620, heigh
         with dpg.tooltip("insert_button"):
             dpg.add_text("Click to insert the overworld into the game.")
 
-    dpg.add_text("", tag="status_text", color=(0, 255, 0))
+    dpg.add_text("", tag="status_text")
     dpg.add_text("                   Compatible expansion version: 1.9.0  ")
 
     dpg.add_spacer(height=20)

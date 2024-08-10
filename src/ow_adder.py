@@ -138,7 +138,15 @@ def insert_overworld_gui():
 
     with open('path.ini', 'w') as configfile:
         config.write(configfile)
-
-    insert_overworld(overworld_name, overworld_id, palette_id, width, height, reflection_palette_tag, size, palette_slot, shadow_size, inanimate, tracks, frame_num)
-
-    dpg.set_value("status_text", "            The new overworld has been successfully inserted.")
+    if overworld_name.strip():
+        try:
+            insert_overworld(
+                overworld_name, overworld_id, palette_id, width, height, 
+                reflection_palette_tag, size, palette_slot, shadow_size, 
+                inanimate, tracks, frame_num
+            )
+            dpg.set_value("status_text", "            The new overworld has been successfully inserted.")
+        except Exception as e:
+            dpg.set_value("status_text", f"            Error inserting overworld: {e}")
+    else:
+        dpg.set_value("status_text", "                       Overworld Name Not Provided")
