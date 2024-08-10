@@ -1,5 +1,5 @@
 import dearpygui.dearpygui as dpg
-from src.ow_adder import select_folder, insert_overworld_gui
+from src.ow_adder import select_folder, insert_overworld_gui, select_and_move_sprite
 
 dpg.create_context()
 
@@ -68,7 +68,21 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=620, heigh
         dpg.add_text("Click to select the pokeemerald-expansion folder")
 
     dpg.add_text("If you have a path file config, you don't need to load it again", tag="folder_path_text", color=(150, 150, 150))
-    
+    dpg.add_spacer(height=10)
+    dpg.add_separator()
+    dpg.add_spacer(height=10)
+    with dpg.group(horizontal=True):
+        dpg.add_text("                    ")
+        #dpg.add_button(label="Select new overworld to add", callback=select_folder, tag="select_ow_button")
+    dpg.add_button(label="Select new overworld to add", callback=select_and_move_sprite, tag="select_ow_button")
+    with dpg.tooltip("select_ow_button"):
+        dpg.add_text("Click to select the new overworld to add to your project")
+        dpg.add_spacer(height=10)
+    dpg.add_text("               Sprite Preview", color=(150, 150, 150))
+    with dpg.group(horizontal=True):
+        dpg.add_text("              ")
+        with dpg.child_window(tag="sprite_preview", width=300, height=64, border=True):
+            dpg.add_text(tag="preview_text")
     dpg.add_spacer(height=10)
     with dpg.group(horizontal=True):
         dpg.add_text("       Overworld Name               Overworld ID    Palette ID (hex)")
@@ -150,11 +164,11 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=620, heigh
     dpg.add_text("                   Compatible expansion version: 1.9.0  ")
 
     dpg.add_spacer(height=20)
-    dpg.add_text("AOA 0.3 By Nexxo", pos=(400, 10))
+    dpg.add_text("AOA 0.3.1 By Nexxo", pos=(380, 10))
 
 dpg.bind_theme("purple_theme")
 
-dpg.create_viewport(title='AxoloteOwAdder', width=540, height=550, resizable=False)
+dpg.create_viewport(title='AxoloteOwAdder', width=540, height=570, resizable=False)
 dpg.set_primary_window("primary_window", True)
 dpg.setup_dearpygui()
 dpg.show_viewport()
