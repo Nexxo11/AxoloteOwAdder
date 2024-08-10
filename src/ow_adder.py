@@ -141,4 +141,4 @@ def insert_overworld_gui():
 
     insert_overworld(overworld_name, overworld_id, palette_id, width, height, reflection_palette_tag, size, palette_slot, shadow_size, inanimate, tracks, frame_num)
 
-    dpg.set_value("status_text", "The new overworld has been successfully inserted.")
+    dpg.set_value("status_text", "            The new overworld has been successfully inserted.")
