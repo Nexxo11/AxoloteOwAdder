@@ -74,7 +74,7 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=620, heigh
     with dpg.group(horizontal=True):
         dpg.add_text("                    ")
         #dpg.add_button(label="Select new overworld to add", callback=select_folder, tag="select_ow_button")
-    dpg.add_button(label="Select new overworld to add", callback=select_and_move_sprite, tag="select_ow_button")
+        dpg.add_button(label="Select new overworld to add", callback=select_and_move_sprite, tag="select_ow_button")
     with dpg.tooltip("select_ow_button"):
         dpg.add_text("Click to select the new overworld to add to your project")
         dpg.add_spacer(height=10)
@@ -83,6 +83,8 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=620, heigh
         dpg.add_text("              ")
         with dpg.child_window(tag="sprite_preview", width=300, height=64, border=True):
             dpg.add_text(tag="preview_text")
+        with dpg.tooltip("sprite_preview"):
+            dpg.add_text("Sprite preview of new overworld")
     dpg.add_spacer(height=10)
     with dpg.group(horizontal=True):
         dpg.add_text("       Overworld Name               Overworld ID    Palette ID (hex)")
@@ -135,6 +137,12 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=620, heigh
             dpg.add_combo(items=["PALSLOT_PLAYER", "PALSLOT_NPC_1", "PALSLOT_NPC_2", "PALSLOT_NPC_3", "PALSLOT_NPC_4", "PALSLOT_NPC_5", "PALSLOT_NPC_6", "PALSLOT_NPC_7"], tag="palette_slot", default_value="PALSLOT_NPC_1", width=150)
             with dpg.tooltip("palette_slot"):
                 dpg.add_text("Select the palette slot for the overworld.")
+        dpg.add_text("          Anim Table")
+        with dpg.group(horizontal=True):
+            dpg.add_text("        ")
+            dpg.add_combo(items=["QuintyPlump", "Standard", "Following", "Following_Asym", "HoOh", "GroudonSide", "Rayquaza", "BrendanMayNormal", "AcroBike", "Surfing", "Nurse", "FieldMove", "BerryTree", "BreakableRock", "CuttableTree", "Fishing"], tag="anim_table", default_value="Standard", width=180)
+            with dpg.tooltip("anim_table"):
+                dpg.add_text("Select the Anim Table for the overworld.")
         dpg.add_spacer(height=10)
         dpg.add_separator()
         dpg.add_spacer(height=10)

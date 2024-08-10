@@ -126,7 +126,7 @@ def insert_line_in_structure(filename, structure_name, insert_text, insert_posit
         f.writelines(lines)
 
 
-def insert_overworld(overworld_name, overworld_id, palette_id, width, height, reflection_palette_tag, size, palette_slot, shadow_size, inanimate, tracks, frame_num):
+def insert_overworld(overworld_name, overworld_id, palette_id, width, height, reflection_palette_tag, size, palette_slot, shadow_size, inanimate, tracks, frame_num, anim_table):
     base_path = config['pkmn_ex_path']['path']
 
     defines_file = f"{base_path}/include/constants/event_objects.h"
@@ -165,7 +165,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_{overworld_name} =
     .tracks = {tracks},
     .oam = &gObjectEventBaseOam_{width}x{height},
     .subspriteTables = sOamTables_{width}x{height},
-    .anims = sAnimTable_Standard,
+    .anims = sAnimTable_{anim_table},
     .images = sPicTable_{overworld_name},
     .affineAnims = gDummySpriteAffineAnimTable,
 }};
@@ -192,6 +192,7 @@ def insert_overworld_gui():
     shadow_size = dpg.get_value("shadow_size")
     inanimate = dpg.get_value("inanimate")
     tracks = dpg.get_value("tracks")
+    anim_table = dpg.get_value("anim_table")
 
     with open('path.ini', 'w') as configfile:
         config.write(configfile)
@@ -200,7 +201,7 @@ def insert_overworld_gui():
             insert_overworld(
                 overworld_name, overworld_id, palette_id, width, height, 
                 reflection_palette_tag, size, palette_slot, shadow_size, 
-                inanimate, tracks, frame_num
+                inanimate, tracks, frame_num, anim_table
             )
             dpg.set_value("status_text", "            The new overworld has been successfully inserted.")
         except Exception as e:
