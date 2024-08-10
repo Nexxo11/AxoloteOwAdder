@@ -7,56 +7,56 @@ dpg.create_context()
 with dpg.theme(tag="purple_theme"):
     # Tema general
     with dpg.theme_component(dpg.mvAll):
-        dpg.add_theme_color(dpg.mvThemeCol_Text, (230, 230, 255))  # Texto en tono lila claro
-        dpg.add_theme_color(dpg.mvThemeCol_Border, (100, 70, 120))  # Bordes en morado oscuro
-        dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (30, 30, 30))  # Fondo del campo de entrada
+        dpg.add_theme_color(dpg.mvThemeCol_Text, (230, 230, 255)) 
+        dpg.add_theme_color(dpg.mvThemeCol_Border, (100, 70, 120))
+        dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (30, 30, 30))
 
     # Tema para botones
     with dpg.theme_component(dpg.mvButton):
-        dpg.add_theme_color(dpg.mvThemeCol_Button, (80, 80, 80))  # Color de fondo
-        dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (100, 100, 200))  # Color al pasar el cursor (celeste)
-        dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (120, 120, 255))  # Color al presionar (celeste más brillante)
-        dpg.add_theme_color(dpg.mvThemeCol_Text, (255, 255, 255))  # Color del texto
-        dpg.add_theme_color(dpg.mvThemeCol_Border, (120, 120, 180))  # Color del borde (celeste claro)
-        dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 5)  # Bordes redondeados
-        dpg.add_theme_style(dpg.mvStyleVar_FramePadding, 10, 5)  # Relleno interno
+        dpg.add_theme_color(dpg.mvThemeCol_Button, (80, 80, 80))
+        dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (100, 100, 200))
+        dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (120, 120, 255))
+        dpg.add_theme_color(dpg.mvThemeCol_Text, (255, 255, 255))
+        dpg.add_theme_color(dpg.mvThemeCol_Border, (120, 120, 180))
+        dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 5)
+        dpg.add_theme_style(dpg.mvStyleVar_FramePadding, 10, 5)
 
     # Tema para campos de texto
     with dpg.theme_component(dpg.mvInputText):
-        dpg.add_theme_color(dpg.mvThemeCol_Border, (80, 60, 120))  # Color del borde (morados más suaves)
-        dpg.add_theme_color(dpg.mvThemeCol_Text, (230, 230, 255))  # Texto en tono lila claro
-        dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 5)  # Bordes redondeados
+        dpg.add_theme_color(dpg.mvThemeCol_Border, (80, 60, 120))
+        dpg.add_theme_color(dpg.mvThemeCol_Text, (230, 230, 255))
+        dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 5)
 
     # Tema para campos de entrada numérica (InputInt)
     with dpg.theme_component(dpg.mvInputInt):
-        dpg.add_theme_color(dpg.mvThemeCol_Border, (80, 60, 120))  # Color del borde (morados más suaves)
-        dpg.add_theme_color(dpg.mvThemeCol_BorderShadow, (0, 0, 0))  # Sombra del borde
-        dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (70, 70, 100))  # Fondo al pasar el cursor (celeste oscuro)
-        dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, (90, 90, 130))  # Fondo activo (celeste más claro)
-        dpg.add_theme_color(dpg.mvThemeCol_Text, (230, 230, 255))  # Color del texto
-        dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 5)  # Bordes redondeados
-        dpg.add_theme_style(dpg.mvStyleVar_FramePadding, 10, 5)  # Relleno interno
-        dpg.add_theme_style(dpg.mvStyleVar_ItemSpacing, 10, 5)  # Espaciado entre ítems
+        dpg.add_theme_color(dpg.mvThemeCol_Border, (80, 60, 120))
+        dpg.add_theme_color(dpg.mvThemeCol_BorderShadow, (0, 0, 0))
+        dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (70, 70, 100))
+        dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, (90, 90, 130)) 
+        dpg.add_theme_color(dpg.mvThemeCol_Text, (230, 230, 255)) 
+        dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 5) 
+        dpg.add_theme_style(dpg.mvStyleVar_FramePadding, 10, 5) 
+        dpg.add_theme_style(dpg.mvStyleVar_ItemSpacing, 10, 5) 
 
     # Tema para combos
     with dpg.theme_component(dpg.mvCombo):
-        dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (50, 50, 100))  # Fondo al pasar el cursor (celeste oscuro)
-        dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, (80, 80, 200))  # Fondo al seleccionar (celeste brillante)
-        dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 5)  # Bordes redondeados
+        dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (50, 50, 100))  
+        dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, (80, 80, 200))  
+        dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 5) 
 
     # Tema para sliders
     with dpg.theme_component(dpg.mvSliderInt):
-        dpg.add_theme_color(dpg.mvThemeCol_SliderGrab, (120, 80, 180))  # Agarrador del slider, morado brillante
-        dpg.add_theme_color(dpg.mvThemeCol_SliderGrabActive, (150, 100, 200))  # Agarrador activo, más brillante
+        dpg.add_theme_color(dpg.mvThemeCol_SliderGrab, (120, 80, 180))
+        dpg.add_theme_color(dpg.mvThemeCol_SliderGrabActive, (150, 100, 200)) 
 
     # Tema para encabezados colapsables
     with dpg.theme_component(dpg.mvCollapsingHeader):
-        dpg.add_theme_color(dpg.mvThemeCol_Header, (60, 60, 80))  # Fondo del encabezado (celeste oscuro)
-        dpg.add_theme_color(dpg.mvThemeCol_HeaderHovered, (80, 80, 120))  # Fondo al pasar el cursor (celeste brillante)
-        dpg.add_theme_color(dpg.mvThemeCol_HeaderActive, (100, 100, 150))  # Fondo activo (celeste más claro)
-        dpg.add_theme_color(dpg.mvThemeCol_Border, (50, 50, 80))  # Color del borde (celeste oscuro)
-        dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 5)  # Bordes redondeados
-        dpg.add_theme_style(dpg.mvStyleVar_FramePadding, 10, 5)  # Relleno interno del encabezado
+        dpg.add_theme_color(dpg.mvThemeCol_Header, (60, 60, 80)) 
+        dpg.add_theme_color(dpg.mvThemeCol_HeaderHovered, (80, 80, 120)) 
+        dpg.add_theme_color(dpg.mvThemeCol_HeaderActive, (100, 100, 150)) 
+        dpg.add_theme_color(dpg.mvThemeCol_Border, (50, 50, 80))  
+        dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 5) 
+        dpg.add_theme_style(dpg.mvStyleVar_FramePadding, 10, 5) 
 
 with dpg.handler_registry():
     dpg.add_key_release_handler(key=dpg.mvKey_Escape, callback=lambda: dpg.stop_dearpygui())
