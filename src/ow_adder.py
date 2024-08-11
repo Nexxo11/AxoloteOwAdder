@@ -89,6 +89,50 @@ def select_and_move_sprite():
     else:
         dpg.set_value("status_text", "                           No sprite selected.")
 
+def get_next_define_number(file_path):
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+    
+    last_define = None
+    for line in lines:
+        line = line.strip()
+        if line.startswith("#define"):
+            parts = line.split()
+            if len(parts) == 3 and parts[1].startswith('OBJ_EVENT_GFX'):
+                try:
+                    number = int(parts[2])
+                    if last_define is None or number > last_define:
+                        last_define = number
+                except ValueError:
+                    pass
+    
+    if last_define is not None:
+        return last_define + 1
+    else:
+        return 1
+
+def get_next_hex_define_number(file_path):
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+    
+    last_define = None
+    for line in lines:
+        line = line.strip()
+        if line.startswith("#define"):
+            parts = line.split()
+            if len(parts) == 3 and parts[1].startswith('OBJ_EVENT_PAL_TAG'):
+                try:
+                    number = int(parts[2], 16)
+                    if last_define is None or number > last_define:
+                        last_define = number
+                except ValueError:
+                    pass
+    
+    if last_define is not None:
+        return last_define + 1
+    else:
+        return 0x111E
+
 
 def insert_after_line_number(filename, line_number, insert_text):
     with open(filename, 'r') as f:
@@ -133,7 +177,7 @@ def insert_line_in_structure(filename, structure_name, insert_text, insert_posit
         f.writelines(lines)
 
 
-def insert_overworld(overworld_name, overworld_id, palette_id, width, height, reflection_palette_tag, size, palette_slot, shadow_size, inanimate, tracks, frame_num, anim_table):
+def insert_overworld(overworld_name, width, height, reflection_palette_tag, size, palette_slot, shadow_size, inanimate, tracks, frame_num, anim_table):
     base_path = config['pkmn_ex_path']['path']
 
     defines_file = f"{base_path}/include/constants/event_objects.h"
@@ -144,9 +188,12 @@ def insert_overworld(overworld_name, overworld_id, palette_id, width, height, re
     movement_file = f"{base_path}/src/event_object_movement.c"
     spritesheet_rules_file = f"{base_path}/spritesheet_rules.mk"
 
+    next_define_id = get_next_define_number(defines_file)
+    next_define_hex_id = get_next_hex_define_number(defines_file)
+
     with open(defines_file, 'a') as f:
-        f.write(f'#define OBJ_EVENT_GFX_{overworld_name.upper()} {overworld_id}\n')
-        f.write(f"#define OBJ_EVENT_PAL_TAG_{overworld_name.upper()} {hex(palette_id)}\n")
+        f.write(f'#define OBJ_EVENT_GFX_{overworld_name.upper()} {next_define_id}\n')
+        f.write(f"#define OBJ_EVENT_PAL_TAG_{overworld_name.upper()} 0x{next_define_hex_id:04X}\n")
 
     with open(object_events_file, 'a') as f:
         f.write(f'const u16 gObjectEventPal_{overworld_name}[] = INCBIN_U16("graphics/object_events/pics/people/{overworld_name}.gbapal");\n')
@@ -188,8 +235,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_{overworld_name} =
 
 def insert_overworld_gui():
     overworld_name = dpg.get_value("overworld_name")
-    overworld_id = int(dpg.get_value("overworld_id"))
-    palette_id = int(dpg.get_value("palette_id"), 16)
+    #overworld_id = int(dpg.get_value("overworld_id"))
+    #palette_id = int(dpg.get_value("palette_id"), 16)
     width = int(dpg.get_value("width"))
     height = int(dpg.get_value("height"))
     frame_num = int(dpg.get_value("frame_num"))
@@ -209,7 +256,7 @@ def insert_overworld_gui():
                 dpg.set_value("status_text", "Invalid width and height combination (16x64 or 64x16 not allowed).")
             else:
                 insert_overworld(
-                    overworld_name, overworld_id, palette_id, width, height, 
+                    overworld_name, width, height, 
                     reflection_palette_tag, size, palette_slot, shadow_size, 
                     inanimate, tracks, frame_num, anim_table
                 )

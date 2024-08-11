@@ -80,25 +80,26 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=620, heigh
             dpg.add_text("Sprite preview of new overworld")
     dpg.add_spacer(height=10)
     with dpg.group(horizontal=True):
-        dpg.add_spacer(width=40)
+        dpg.add_spacer(width=160)
         dpg.add_text("Overworld Name")
-        dpg.add_spacer(width=90)
-        dpg.add_text("Overworld ID")
-        dpg.add_spacer(width=10)
-        dpg.add_text("Palette ID (hex)")
+        
+        #dpg.add_spacer(width=90)
+        #dpg.add_text("Overworld ID")
+        #dpg.add_spacer(width=10)
+        #dpg.add_text("Palette ID (hex)")
     with dpg.group(horizontal=True):
-        dpg.add_spacer(width=35)
+        dpg.add_spacer(width=150)
         dpg.add_input_text(tag="overworld_name", width=200)
         with dpg.tooltip("overworld_name"):
-            dpg.add_text("Enter the name of the overworld character.\nExample: NPC_Gary.")
+            dpg.add_text("Enter the name of the overworld character.\nExample: GARY.")
 
-        dpg.add_input_text(tag="overworld_id", default_value="241", width=100)
-        with dpg.tooltip("overworld_id"):
-            dpg.add_text("Enter the unique ID for the overworld. Default is 241.")
+        #dpg.add_input_text(tag="overworld_id", default_value="241", width=100)
+        #with dpg.tooltip("overworld_id"):
+            #dpg.add_text("Enter the unique ID for the overworld. Default is 241.")
 
-        dpg.add_input_text(tag="palette_id", default_value="1125", width=100)
-        with dpg.tooltip("palette_id"):
-            dpg.add_text("Enter the palette ID in hexadecimal format.")
+        #dpg.add_input_text(tag="palette_id", default_value="1125", width=100)
+        #with dpg.tooltip("palette_id"):
+        #    dpg.add_text("Enter the palette ID in hexadecimal format.")
 
     dpg.add_spacer(height=10)
     dpg.add_separator()
@@ -184,7 +185,7 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=620, heigh
         dpg.add_text("Compatible expansion version: 1.9.0  ")
 
     dpg.add_spacer(height=20)
-    dpg.add_text("AOA 0.3.1 By Nexxo", pos=(380, 10))
+    dpg.add_text("AOA 0.3.2 By Nexxo", pos=(380, 10))
 
 dpg.bind_theme("purple_theme")
 
