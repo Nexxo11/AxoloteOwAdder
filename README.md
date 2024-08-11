@@ -1,10 +1,10 @@
 # AxoloteOwAdder
-# Version 0.3
+# Version 0.3.1
 
 Is a tool for adding and configuring overworld events in the Pokeemerald-expansion project.
 It uses a DearPyGui-based graphical user interface (GUI)
 
-![image](https://github.com/user-attachments/assets/b4c4f3cc-adda-4949-8396-ea648c0103a2)
+![image](https://github.com/user-attachments/assets/b5909521-343e-4efd-9fbb-eaa3fb276f06)
 
 - Insert and configure overworld events in 2 secs
 - Easy to use
@@ -32,3 +32,10 @@ It uses a DearPyGui-based graphical user interface (GUI)
 5. Run AxoloteOwAdder
     Execute the tool and select your Pokeemerald-expansion directory.
     The tool will be ready to use.
+
+## Build
+1. Install pyinstaller
+
+2. Use this command
+
+   pyinstaller --noconfirm --onedir --windowed --icon "AxoloteOwAdder\icon.ico" --name "AxoloteOwAdder" --add-data "AxoloteOwAdder\src\ow_adder.py;."  "AxoloteOwAdder\ui.py"
