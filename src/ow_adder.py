@@ -35,6 +35,13 @@ def select_and_move_sprite():
     sprite_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png;*")])
 
     if sprite_path:
+
+
+        if dpg.does_item_exist("sprite_image"):
+            dpg.delete_item("sprite_image")
+        if dpg.does_item_exist("sprite_texture"):
+            dpg.delete_item("sprite_texture")
+
         # Obtener la carpeta de destino
         config = configparser.ConfigParser()
         config.read('path.ini')
@@ -198,12 +205,15 @@ def insert_overworld_gui():
         config.write(configfile)
     if overworld_name.strip():
         try:
-            insert_overworld(
-                overworld_name, overworld_id, palette_id, width, height, 
-                reflection_palette_tag, size, palette_slot, shadow_size, 
-                inanimate, tracks, frame_num, anim_table
-            )
-            dpg.set_value("status_text", "            The new overworld has been successfully inserted.")
+            if (width == 16 and height == 64) or (width == 64 and height == 16):
+                dpg.set_value("status_text", "Invalid width and height combination (16x64 or 64x16 not allowed).")
+            else:
+                insert_overworld(
+                    overworld_name, overworld_id, palette_id, width, height, 
+                    reflection_palette_tag, size, palette_slot, shadow_size, 
+                    inanimate, tracks, frame_num, anim_table
+                )
+                dpg.set_value("status_text", "            The new overworld has been successfully inserted.")
         except Exception as e:
             dpg.set_value("status_text", f"            Error inserting overworld: {e}")
     else:
