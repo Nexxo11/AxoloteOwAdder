@@ -37,4 +37,5 @@ It uses a DearPyGui-based graphical user interface (GUI)
 1. Install pyinstaller
 
 2. Use this command
+
    pyinstaller --noconfirm --onedir --windowed --icon "AxoloteOwAdder\icon.ico" --name "AxoloteOwAdder" --add-data "AxoloteOwAdder\src\ow_adder.py;."  "AxoloteOwAdder\ui.py"
