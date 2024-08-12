@@ -1,5 +1,6 @@
 import dearpygui.dearpygui as dpg
 from src.ow_adder import select_folder, insert_overworld_gui, select_and_move_sprite
+#from src.translate import change_language
 
 dpg.create_context()
 
@@ -54,6 +55,9 @@ with dpg.handler_registry():
     dpg.add_key_release_handler(key=dpg.mvKey_Escape, callback=lambda: dpg.stop_dearpygui())
 
 with dpg.window(tag="primary_window", label="Insert Overworld", width=620, height=460, no_title_bar=True, no_resize=True, no_move=True):
+
+    #dpg.add_combo(items=["en", "es"], default_value="en", callback=change_language, width=100)
+    dpg.add_text("", tag="footer_text", pos=(380, 10))
     
     dpg.add_button(label="Select pokeemerald-expansion Folder", callback=select_folder, tag="select_folder_button")
     with dpg.tooltip("select_folder_button"):
@@ -71,7 +75,7 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=620, heigh
     dpg.add_spacer(height=10)
     with dpg.group(horizontal=True):
         dpg.add_spacer(width=100)
-        dpg.add_text("Sprite Preview", color=(150, 150, 150))
+        dpg.add_text("Sprite Preview", tag="sprite_txt_preview", color=(150, 150, 150))
     with dpg.group(horizontal=True):
         dpg.add_spacer(width=100)
         with dpg.child_window(tag="sprite_preview", width=300, height=64, border=True):
@@ -81,7 +85,7 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=620, heigh
     dpg.add_spacer(height=10)
     with dpg.group(horizontal=True):
         dpg.add_spacer(width=160)
-        dpg.add_text("Overworld Name")
+        dpg.add_text("Overworld Name", tag="overworld_txt_name")
         
         #dpg.add_spacer(width=90)
         #dpg.add_text("Overworld ID")
@@ -106,17 +110,17 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=620, heigh
     dpg.add_spacer(height=10)
     
     with dpg.group(horizontal=True):
-        dpg.add_text("Width")
+        dpg.add_text("Width", tag="width_txt")
         dpg.add_combo(items=["16", "32", "64"], tag="width", default_value="32", width=100)
         with dpg.tooltip("width"):
             dpg.add_text("Select the width of the overworld sprite.")
         
-        dpg.add_text("Height")
+        dpg.add_text("Height", tag="height_txt")
         dpg.add_combo(items=["16", "32", "64"], tag="height", default_value="32", width=100)
         with dpg.tooltip("height"):
             dpg.add_text("Select the height of the overworld sprite.")
         
-        dpg.add_text("Frame Number")
+        dpg.add_text("Frames Num", tag="framenum_txt")
         dpg.add_input_int(tag="frame_num", default_value=9, width=100)
         with dpg.tooltip("frame_num"):
             dpg.add_text("Enter the number of frames for the overworld animation.")
@@ -125,12 +129,12 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=620, heigh
     dpg.add_separator()
     dpg.add_spacer(height=10)
     
-    with dpg.collapsing_header(label="Extra Options"):
+    with dpg.collapsing_header(label="Extra Options", tag="extra_options"):
         with dpg.group(horizontal=True):
             dpg.add_spacer(width=60)
-            dpg.add_text("Reflection Palette Tag")
+            dpg.add_text("Reflection Palette Tag", tag="reflection_palette_txt")
             dpg.add_spacer(width=40)
-            dpg.add_text("Palette Slot")
+            dpg.add_text("Palette Slot", tag="palette_slot_txt")
         with dpg.group(horizontal=True):
             dpg.add_spacer(width=50)
             dpg.add_input_text(tag="reflection_palette_tag", default_value="OBJ_EVENT_PAL_TAG_NONE", width=200)
@@ -142,7 +146,7 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=620, heigh
                 dpg.add_text("Select the palette slot for the overworld.")
         with dpg.group(horizontal=True):
             dpg.add_spacer(width=60)
-            dpg.add_text("Anim Table")
+            dpg.add_text("Anim Table", tag="anim_table_txt")
         with dpg.group(horizontal=True):
             dpg.add_spacer(width=50)
             dpg.add_combo(items=["QuintyPlump", "Standard", "Following", "Following_Asym", "HoOh", "GroudonSide", "Rayquaza", "BrendanMayNormal", "AcroBike", "Surfing", "Nurse", "FieldMove", "BerryTree", "BreakableRock", "CuttableTree", "Fishing"], tag="anim_table", default_value="Standard", width=180)
@@ -153,11 +157,11 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=620, heigh
         dpg.add_spacer(height=10)
         with dpg.group(horizontal=True):
             dpg.add_spacer(width=50)
-            dpg.add_text("Shadow Size")
+            dpg.add_text("Shadow Size", tag="shadow_size_txt")
             dpg.add_spacer(width=90)
-            dpg.add_text("Inanimate")
+            dpg.add_text("Inanimate", tag="inanimate_txt")
             dpg.add_spacer(width=30)
-            dpg.add_text("Tracks")
+            dpg.add_text("Tracks", tag="tracks_txt")
         with dpg.group(horizontal=True):
             dpg.add_spacer(width=40)
             dpg.add_combo(items=["SHADOW_SIZE_S", "SHADOW_SIZE_M", "SHADOW_SIZE_L", "SHADOW_SIZE_XL"], tag="shadow_size", default_value="SHADOW_SIZE_M", width=150)
@@ -182,7 +186,7 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=620, heigh
     dpg.add_text("", tag="status_text")
     with dpg.group(horizontal=True):
         dpg.add_spacer(width=130)
-        dpg.add_text("Compatible expansion version: 1.9.0  ")
+        dpg.add_text("Compatible expansion version: 1.9.0", tag="expansion_ver_txt")
 
     dpg.add_spacer(height=20)
     dpg.add_text("AOA 0.3.2 By Nexxo", pos=(380, 10))

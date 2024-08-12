@@ -1,0 +1,42 @@
+{
+    "en": {
+        "select_folder_button": "Select pokeemerald-expansion Folder",
+        "folder_path_text": "If you have a path file config, you don't need to load it again",
+        "select_ow_button": "Select new overworld to add",
+        "sprite_preview": "Sprite Preview",
+        "overworld_txt_name": "Overworld Name",
+        "width_txt": "Width",
+        "height_txt": "Height",
+        "framenum_txt": "Frames Num",
+        "extra_options": "Extra Options",
+        "reflection_palette_txt": "Reflection Palette Tag",
+        "palette_slot_txt": "Palette Slot",
+        "anim_table_txt": "Anim Table",
+        "shadow_size_txt": "Shadow Size",
+        "inanimate_txt": "Inanimate",
+        "tracks_txt": "Tracks",
+        "insert_button": "Insert Overworld",
+        "expansion_ver_txt": "Compatible expansion version: 1.9.0",
+        "footer_text": "AOA 0.3.2 By Nexxo"
+    },
+    "es": {
+        "select_folder_button": "Seleccionar carpeta pokeemerald-expansion",
+        "folder_path_text": "Si ya cargaste anteriormente, no necesitas cargarlo de nuevo",
+        "select_ow_button": "Cargar Nuevo Overworld",
+        "sprite_preview": "Vista previa del sprite",
+        "overworld_txt_name": "Nombre del overworld",
+        "width_txt": "Ancho",
+        "height_txt": "Altura",
+        "framenum_txt": "Núm. frames",
+        "extra_options": "Opciones adicionales",
+        "reflection_palette_txt": "Paleta Reflejos",
+        "palette_slot_txt": "Ranura de paleta",
+        "anim_table_txt": "Tabla de animación",
+        "shadow_size_txt": "Tamaño de sombra",
+        "inanimate_txt": "Inanimado",
+        "tracks_txt": "Huellas",
+        "insert_button": "Insertar Overworld",
+        "expansion_ver_txt": "Versión de expansión compatible: 1.9.0",
+        "footer_text": "AOA 0.3.2 By Nexxo"
+    }
+}
