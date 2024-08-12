@@ -194,6 +194,9 @@ def insert_line_in_structure(filename, structure_name, insert_text, insert_posit
 def pokeemerald_pal_define(file_path, overworld_name):
     next_define_hex_id = get_next_hex_define_number(file_path)
     
+    global define_pal_emerald_hex_id
+    define_pal_emerald_hex_id = next_define_hex_id
+
     with open(file_path, 'r+') as f:
         lines = f.readlines()
 
@@ -331,6 +334,11 @@ def insert_overworld_gui():
     anim_table = dpg.get_value("anim_table")
     pal_tag = dpg.get_value("pal_tag")
     disableReflection = dpg.get_value("disableReflection")
+    
+    if 'pkmn_path' in config:
+        if 'dynamic_pal_system' in config['pkmn_path']:
+            dynamic_pal_system = config['pkmn_path']['dynamic_pal_system']
+            project_version = config['pkmn_path']['project_version']
 
     with open('path.ini', 'w') as configfile:
         config.write(configfile)
@@ -344,7 +352,12 @@ def insert_overworld_gui():
                     reflection_palette_tag, size, palette_slot, shadow_size, 
                     inanimate, tracks, frame_num, anim_table, pal_tag, disableReflection
                 )
-                dpg.set_value("status_text", f"            The new overworld has been successfully inserted.\n                          GfxID: {define_overworld_id}  PalID: 0x{define_overworld_hex_id:04X}")
+                if project_version == 'Poke-expansion':
+                    dpg.set_value("status_text", f"            The new overworld has been successfully inserted.\n                          GfxID: {define_overworld_id}  PalID: 0x{define_overworld_hex_id:04X}")
+                if project_version == 'Pokeemerald' and dynamic_pal_system == 'True':
+                    dpg.set_value("status_text", f"            The new overworld has been successfully inserted.\n                          GfxID: {define_overworld_id}  PalID: 0x{define_pal_emerald_hex_id:04X}")
+                else:
+                    dpg.set_value("status_text", f"            The new overworld has been successfully inserted.\n                          GfxID: {define_overworld_id}  OBJ_EVENT_PAL_TAG_{pal_tag}")
         except Exception as e:
             dpg.set_value("status_text", f"            Error inserting overworld: \n{e}")
     else:

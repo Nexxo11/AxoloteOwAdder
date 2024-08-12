@@ -94,7 +94,7 @@ pal_tag_items = [
     "NONE"
 ]
 
-with dpg.window(tag="popup_window", label="Configure Project", modal=False, show=False, no_resize=True):
+with dpg.window(tag="popup_window", label="Configure Project", modal=True, show=False, no_resize=True, no_close=True):
     dpg.add_text("Select the option that matches your project")
     dpg.add_combo(items=["Pokeemerald", "Poke-expansion"], tag="project_setting_ver", default_value="Poke-expansion")
     dpg.add_separator()
@@ -113,9 +113,9 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=540, heigh
     with dpg.tooltip("verify_version"):
         dpg.add_text("Click to check for the latest version.")
     
-    dpg.add_button(label="Select pokeemerald-expansion Folder", callback=select_folder, tag="select_folder_button")
+    dpg.add_button(label="Select project Folder", callback=select_folder, tag="select_folder_button")
     with dpg.tooltip("select_folder_button"):
-        dpg.add_text("Click to select the pokeemerald-expansion folder")
+        dpg.add_text("Click to select the project folder")
 
     dpg.add_text("If you have a path file config, you don't need to load it again", tag="folder_path_text", color=(150, 150, 150))
     dpg.add_spacer(height=10)
@@ -140,24 +140,11 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=540, heigh
     with dpg.group(horizontal=True):
         dpg.add_spacer(width=156)
         dpg.add_text("Overworld Name", tag="overworld_txt_name")
-        
-        #dpg.add_spacer(width=90)
-        #dpg.add_text("Overworld ID")
-        #dpg.add_spacer(width=10)
-        #dpg.add_text("Palette ID (hex)")
     with dpg.group(horizontal=True):
         dpg.add_spacer(width=146)
         dpg.add_input_text(tag="overworld_name", width=200)
         with dpg.tooltip("overworld_name"):
             dpg.add_text("Enter the name of the overworld character.\nExample: GARY.")
-
-        #dpg.add_input_text(tag="overworld_id", default_value="241", width=100)
-        #with dpg.tooltip("overworld_id"):
-            #dpg.add_text("Enter the unique ID for the overworld. Default is 241.")
-
-        #dpg.add_input_text(tag="palette_id", default_value="1125", width=100)
-        #with dpg.tooltip("palette_id"):
-        #    dpg.add_text("Enter the palette ID in hexadecimal format.")
 
     dpg.add_spacer(height=10)
     dpg.add_separator()
@@ -264,7 +251,7 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=540, heigh
 
 dpg.bind_theme("purple_theme")
 
-dpg.create_viewport(title='AxoloteOwAdder', width=540, height=590, resizable=False)
+dpg.create_viewport(title='AxoloteOwAdder', width=540, height=640, resizable=False)
 dpg.set_primary_window("primary_window", True)
 dpg.setup_dearpygui()
 dpg.show_viewport()
