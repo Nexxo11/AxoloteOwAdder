@@ -30,28 +30,17 @@ def select_folder():
             print(f"An error occurred: {e}")
 
 def verify_version():
-    # URL correcta para obtener el contenido "raw" del archivo
-    url = "https://raw.githubusercontent.com/Nexxo11/AxoloteOwAdder/main/ver.txt"
-
-    # Obtener el directorio donde está ubicado el script
+    url = "https://raw.githubusercontent.com/Nexxo11/AxoloteOwAdder/main/src/ver.txt"
     script_dir = os.path.dirname(os.path.abspath(__file__))
-
-    # Construir la ruta completa al archivo 'ver.txt'
     local_version_path = os.path.join(script_dir, 'ver.txt')
-
-    # Leer el archivo de versión local
     with open(local_version_path, 'r') as file:
         local_version = file.read().strip()
-
-    # Obtener la versión en GitHub
     response = requests.get(url)
     github_version = response.text.strip()
-
-    # Comparar versiones
     if github_version > local_version:
-        print("Hay una nueva versión")
+        dpg.set_value("ver_status_text", "New Update Available")
     else:
-        print("nada rey")
+        dpg.set_value("ver_status_text", "Have Latest Version")
 
 def select_and_move_sprite():
     # Seleccionar el sprite

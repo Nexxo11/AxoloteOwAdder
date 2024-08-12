@@ -59,9 +59,11 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=540, heigh
     #dpg.add_combo(items=["en", "es"], default_value="en", callback=change_language, width=100)
     dpg.add_text("", tag="footer_text", pos=(380, 10))
 
-    dpg.add_button(label="Update?", callback=verify_version, tag="verefy_version")
-    with dpg.tooltip("verefy_version"):
-        dpg.add_text("Click to select the new overworld to add to your project")
+    with dpg.group(horizontal=True):
+        dpg.add_button(label="Check for Updates", callback=verify_version, tag="verify_version")
+        dpg.add_text("", tag="ver_status_text")
+    with dpg.tooltip("verify_version"):
+        dpg.add_text("Click to check for the latest version.")
     
     dpg.add_button(label="Select pokeemerald-expansion Folder", callback=select_folder, tag="select_folder_button")
     with dpg.tooltip("select_folder_button"):
@@ -197,7 +199,7 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=540, heigh
 
 dpg.bind_theme("purple_theme")
 
-dpg.create_viewport(title='AxoloteOwAdder', width=540, height=580, resizable=False)
+dpg.create_viewport(title='AxoloteOwAdder', width=540, height=590, resizable=False)
 dpg.set_primary_window("primary_window", True)
 dpg.setup_dearpygui()
 dpg.show_viewport()
