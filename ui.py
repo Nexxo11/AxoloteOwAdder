@@ -1,5 +1,5 @@
 import dearpygui.dearpygui as dpg
-from src.ow_adder import select_folder, insert_overworld_gui, select_and_move_sprite
+from src.ow_adder import select_folder, insert_overworld_gui, select_and_move_sprite, verify_version
 from src.translate import change_language
 
 dpg.create_context()
@@ -58,6 +58,10 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=540, heigh
 
     #dpg.add_combo(items=["en", "es"], default_value="en", callback=change_language, width=100)
     dpg.add_text("", tag="footer_text", pos=(380, 10))
+
+    dpg.add_button(label="Update?", callback=verify_version, tag="verefy_version")
+    with dpg.tooltip("verefy_version"):
+        dpg.add_text("Click to select the new overworld to add to your project")
     
     dpg.add_button(label="Select pokeemerald-expansion Folder", callback=select_folder, tag="select_folder_button")
     with dpg.tooltip("select_folder_button"):
