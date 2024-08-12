@@ -191,6 +191,11 @@ def insert_overworld(overworld_name, width, height, reflection_palette_tag, size
     next_define_id = get_next_define_number(defines_file)
     next_define_hex_id = get_next_hex_define_number(defines_file)
 
+    global define_overworld_id
+    global define_overworld_hex_id
+    define_overworld_id = next_define_id
+    define_overworld_hex_id = next_define_hex_id
+
     with open(defines_file, 'a') as f:
         f.write(f'#define OBJ_EVENT_GFX_{overworld_name.upper()} {next_define_id}\n')
         f.write(f"#define OBJ_EVENT_PAL_TAG_{overworld_name.upper()} 0x{next_define_hex_id:04X}\n")
@@ -260,7 +265,7 @@ def insert_overworld_gui():
                     reflection_palette_tag, size, palette_slot, shadow_size, 
                     inanimate, tracks, frame_num, anim_table
                 )
-                dpg.set_value("status_text", "            The new overworld has been successfully inserted.")
+                dpg.set_value("status_text", f"            The new overworld has been successfully inserted.\n                            GfxID: {define_overworld_id}  PalID: 0x{define_overworld_hex_id:04X}")
         except Exception as e:
             dpg.set_value("status_text", f"            Error inserting overworld: {e}")
     else:
