@@ -1,6 +1,6 @@
 import dearpygui.dearpygui as dpg
 from src.ow_adder import select_folder, insert_overworld_gui, select_and_move_sprite
-#from src.translate import change_language
+from src.translate import change_language
 
 dpg.create_context()
 
@@ -54,7 +54,7 @@ with dpg.theme(tag="purple_theme"):
 with dpg.handler_registry():
     dpg.add_key_release_handler(key=dpg.mvKey_Escape, callback=lambda: dpg.stop_dearpygui())
 
-with dpg.window(tag="primary_window", label="Insert Overworld", width=620, height=460, no_title_bar=True, no_resize=True, no_move=True):
+with dpg.window(tag="primary_window", label="Insert Overworld", width=540, height=580, no_title_bar=True, no_resize=True, no_move=True):
 
     #dpg.add_combo(items=["en", "es"], default_value="en", callback=change_language, width=100)
     dpg.add_text("", tag="footer_text", pos=(380, 10))
@@ -68,7 +68,7 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=620, heigh
     dpg.add_separator()
     dpg.add_spacer(height=10)
     with dpg.group(horizontal=True):
-        dpg.add_spacer(width=150)
+        dpg.add_spacer(width=142)
         dpg.add_button(label="Select new overworld to add", callback=select_and_move_sprite, tag="select_ow_button")
     with dpg.tooltip("select_ow_button"):
         dpg.add_text("Click to select the new overworld to add to your project")
@@ -77,14 +77,14 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=620, heigh
         dpg.add_spacer(width=100)
         dpg.add_text("Sprite Preview", tag="sprite_txt_preview", color=(150, 150, 150))
     with dpg.group(horizontal=True):
-        dpg.add_spacer(width=100)
+        dpg.add_spacer(width=96)
         with dpg.child_window(tag="sprite_preview", width=300, height=64, border=True):
             dpg.add_text(tag="preview_text")
         with dpg.tooltip("sprite_preview"):
             dpg.add_text("Sprite preview of new overworld")
     dpg.add_spacer(height=10)
     with dpg.group(horizontal=True):
-        dpg.add_spacer(width=160)
+        dpg.add_spacer(width=156)
         dpg.add_text("Overworld Name", tag="overworld_txt_name")
         
         #dpg.add_spacer(width=90)
@@ -92,7 +92,7 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=620, heigh
         #dpg.add_spacer(width=10)
         #dpg.add_text("Palette ID (hex)")
     with dpg.group(horizontal=True):
-        dpg.add_spacer(width=150)
+        dpg.add_spacer(width=146)
         dpg.add_input_text(tag="overworld_name", width=200)
         with dpg.tooltip("overworld_name"):
             dpg.add_text("Enter the name of the overworld character.\nExample: GARY.")
@@ -178,14 +178,14 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=620, heigh
 
     dpg.add_spacer(height=15)
     with dpg.group(horizontal=True):
-        dpg.add_spacer(width=155)
+        dpg.add_spacer(width=146)
         dpg.add_button(label="Insert Overworld", callback=insert_overworld_gui, width=200, tag="insert_button")
         with dpg.tooltip("insert_button"):
             dpg.add_text("Click to insert the overworld into the game.")
 
     dpg.add_text("", tag="status_text")
     with dpg.group(horizontal=True):
-        dpg.add_spacer(width=130)
+        dpg.add_spacer(width=120)
         dpg.add_text("Compatible expansion version: 1.9.0", tag="expansion_ver_txt")
 
     dpg.add_spacer(height=20)

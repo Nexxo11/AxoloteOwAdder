@@ -258,14 +258,14 @@ def insert_overworld_gui():
     if overworld_name.strip():
         try:
             if (width == 16 and height == 64) or (width == 64 and height == 16):
-                dpg.set_value("status_text", "Invalid width and height combination (16x64 or 64x16 not allowed).")
+                dpg.set_value("status_text", "     Invalid width and height combination (16x64 or 64x16 not allowed).")
             else:
                 insert_overworld(
                     overworld_name, width, height, 
                     reflection_palette_tag, size, palette_slot, shadow_size, 
                     inanimate, tracks, frame_num, anim_table
                 )
-                dpg.set_value("status_text", f"            The new overworld has been successfully inserted.\n                            GfxID: {define_overworld_id}  PalID: 0x{define_overworld_hex_id:04X}")
+                dpg.set_value("status_text", f"            The new overworld has been successfully inserted.\n                          GfxID: {define_overworld_id}  PalID: 0x{define_overworld_hex_id:04X}")
         except Exception as e:
             dpg.set_value("status_text", f"            Error inserting overworld: {e}")
     else:

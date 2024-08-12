@@ -1,16 +1,23 @@
 import dearpygui.dearpygui as dpg
 import json
+import os
 
 def load_translations(language):
-    with open('translate.json', 'r', encoding='utf-8') as file:
+    # Get the directory of the current script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    
+    # Construct the path to translate.json
+    json_path = os.path.join(script_dir, 'translate.json')
+    
+    # Load the JSON file
+    with open(json_path, 'r', encoding='utf-8') as file:
         translations = json.load(file)
+    
     return translations.get(language, {})
 
-# Initialize language variable
-current_language = 'en'
+current_language = "en"
 translations = load_translations(current_language)
 
-# Función para obtener el texto traducido
 def get_text(key):
     return translations.get(key, f"[Missing translation for {key}]")
 
@@ -20,6 +27,7 @@ def change_language(sender, app_data):
     update_texts()
 
 def update_texts():
+    print("Updating texts...")
     dpg.set_item_label('select_folder_button', get_text('select_folder_button'))
     dpg.set_value('folder_path_text', get_text('folder_path_text'))
     dpg.set_item_label('select_ow_button', get_text('select_ow_button'))
@@ -37,5 +45,3 @@ def update_texts():
     dpg.set_value('tracks_txt', get_text('tracks_txt'))
     dpg.set_item_label('insert_button', get_text('insert_button'))
     dpg.set_value('expansion_ver_txt', get_text('expansion_ver_txt'))
-    dpg.set_value('footer_text', get_text('footer_text'))
-
