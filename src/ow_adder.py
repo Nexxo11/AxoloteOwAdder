@@ -43,7 +43,6 @@ def verify_version():
         dpg.set_value("ver_status_text", "Have Latest Version")
 
 def select_and_move_sprite():
-    # Seleccionar el sprite
     root = tk.Tk()
     root.withdraw()
     sprite_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png;*")])
@@ -56,7 +55,6 @@ def select_and_move_sprite():
         if dpg.does_item_exist("sprite_texture"):
             dpg.delete_item("sprite_texture")
 
-        # Obtener la carpeta de destino
         config = configparser.ConfigParser()
         config.read('path.ini')
         
@@ -65,33 +63,24 @@ def select_and_move_sprite():
             
             if not os.path.exists(destination_folder):
                 os.makedirs(destination_folder)
-
-            # Mover el sprite a la carpeta destino
             destination_path = os.path.join(destination_folder, os.path.basename(sprite_path))
             shutil.move(sprite_path, destination_path)
 
-            # Mostrar el sprite en la aplicación
             if os.path.exists(destination_path):
                 try:
                     width, height, channels, data = dpg.load_image(destination_path)
-
-                    # Obtener el tamaño del área de vista previa
                     preview_width = dpg.get_item_width("sprite_preview")
                     preview_height = dpg.get_item_height("sprite_preview")
 
-                    # Calcular las coordenadas para centrar la imagen
                     pos_x = (preview_width - width) / 2 if width < preview_width else 0
                     pos_y = (preview_height - height) / 2 if height < preview_height else 0
 
-                    # Si ya hay una imagen previa cargada, la eliminamos
                     if dpg.does_item_exist("sprite_image"):
                         dpg.delete_item("sprite_image")
 
-                    # Crear una textura para la imagen
                     with dpg.texture_registry(show=False):
                         dpg.add_static_texture(width, height, data, tag="sprite_texture")
 
-                    # Mostrar la imagen centrada en la ventana
                     dpg.add_image("sprite_texture", parent="sprite_preview", tag="sprite_image", pos=(pos_x, pos_y))
                     dpg.set_value("status_text", f"                             Sprite moved to\n             graphics/object_events/pics/people/ and displayed.")
                 except Exception as e:

@@ -3,13 +3,8 @@ import json
 import os
 
 def load_translations(language):
-    # Get the directory of the current script
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    
-    # Construct the path to translate.json
     json_path = os.path.join(script_dir, 'translate.json')
-    
-    # Load the JSON file
     with open(json_path, 'r', encoding='utf-8') as file:
         translations = json.load(file)
     
