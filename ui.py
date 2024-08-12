@@ -1,5 +1,5 @@
 import dearpygui.dearpygui as dpg
-from src.ow_adder import select_folder, insert_overworld_gui, select_and_move_sprite, verify_version
+from src.ow_adder import select_folder, insert_overworld_gui, select_and_move_sprite, verify_version, complete_config
 from src.translate import change_language
 
 dpg.create_context()
@@ -53,6 +53,54 @@ with dpg.theme(tag="purple_theme"):
 
 with dpg.handler_registry():
     dpg.add_key_release_handler(key=dpg.mvKey_Escape, callback=lambda: dpg.stop_dearpygui())
+
+pal_tag_items = [
+    "BRENDAN",
+    "BRENDAN_REFLECTION",
+    "BRIDGE_REFLECTION",
+    "NPC_1",
+    "NPC_2",
+    "NPC_3",
+    "NPC_4",
+    "NPC_1_REFLECTION",
+    "NPC_2_REFLECTION",
+    "NPC_3_REFLECTION",
+    "NPC_4_REFLECTION",
+    "QUINTY_PLUMP",
+    "QUINTY_PLUMP_REFLECTION",
+    "TRUCK",
+    "VIGOROTH",
+    "ZIGZAGOON",
+    "MAY",
+    "MAY_REFLECTION",
+    "MOVING_BOX",
+    "CABLE_CAR",
+    "SSTIDAL",
+    "PLAYER_UNDERWATER",
+    "KYOGRE",
+    "KYOGRE_REFLECTION",
+    "GROUDON",
+    "GROUDON_REFLECTION",
+    "UNUSED",
+    "SUBMARINE_SHADOW",
+    "POOCHYENA",
+    "RED_LEAF",
+    "DEOXYS",
+    "BIRTH_ISLAND_STONE",
+    "HO_OH",
+    "LUGIA",
+    "RS_BRENDAN",
+    "RS_MAY",
+    "NONE"
+]
+
+with dpg.window(tag="popup_window", label="Configure Project", modal=False, show=False, no_resize=True):
+    dpg.add_text("Select the option that matches your project")
+    dpg.add_combo(items=["Pokeemerald", "Poke-expansion"], tag="project_setting_ver", default_value="Poke-expansion")
+    dpg.add_separator()
+    dpg.add_checkbox(label="Dynamic Pal System", tag="project_setting_pal", default_value=True)
+    dpg.add_separator()
+    dpg.add_button(label="Complete", callback=complete_config)
 
 with dpg.window(tag="primary_window", label="Insert Overworld", width=540, height=580, no_title_bar=True, no_resize=True, no_move=True):
 
@@ -153,6 +201,7 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=540, heigh
         with dpg.group(horizontal=True):
             dpg.add_spacer(width=60)
             dpg.add_text("Anim Table", tag="anim_table_txt")
+            dpg.add_spacer(width=90)
         with dpg.group(horizontal=True):
             dpg.add_spacer(width=50)
             dpg.add_combo(items=["QuintyPlump", "Standard", "Following", "Following_Asym", "HoOh", "GroudonSide", "Rayquaza", "BrendanMayNormal", "AcroBike", "Surfing", "Nurse", "FieldMove", "BerryTree", "BreakableRock", "CuttableTree", "Fishing"], tag="anim_table", default_value="Standard", width=180)
@@ -181,6 +230,22 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=540, heigh
             dpg.add_combo( items=["TRUE", "FALSE"], tag="tracks", default_value="FALSE", width=100)
             with dpg.tooltip("tracks"):
                 dpg.add_text("Set to TRUE if the overworld should leave tracks when moving.")
+    dpg.add_separator()
+    with dpg.collapsing_header(label="Pokeemerald Options", tag="pokeemerald_options"):
+        with dpg.group(horizontal=True):
+            dpg.add_spacer(width=50)
+            dpg.add_text("Select Palette Tag (NO DPS)", tag="pal_tag_txt")
+            dpg.add_spacer(width=40)
+            dpg.add_text("Disable Reflection", tag="disableReflection_txt")
+        with dpg.group(horizontal=True):
+            dpg.add_spacer(width=50)
+            with dpg.tooltip("pal_tag_txt"):
+                dpg.add_text("if not using Dynamic Pal System.")
+            dpg.add_combo(items=pal_tag_items, tag="pal_tag", default_value="NPC_1", width=180)
+            with dpg.tooltip("pal_tag"):
+                dpg.add_text("if not using Dynamic Pal System.")
+            dpg.add_spacer(width=50)
+            dpg.add_combo( items=["TRUE", "FALSE"], tag="disableReflection", default_value="FALSE", width=100)
 
     dpg.add_spacer(height=15)
     with dpg.group(horizontal=True):
