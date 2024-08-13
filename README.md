@@ -1,8 +1,7 @@
 # AxoloteOwAdder
 # Version 0.3.2
 
-Is a tool for adding and configuring overworld events in the Pokeemerald-expansion project.
-It uses a DearPyGui-based graphical user interface (GUI)
+Is a tool for adding and configuring overworld events in the Pokeemerald
 
 ![image](https://github.com/user-attachments/assets/afd40f40-25c9-4284-a16e-bf0d9cea5224)
 ![image](https://github.com/user-attachments/assets/57e493b1-8778-4446-a972-672ef68b5895)
