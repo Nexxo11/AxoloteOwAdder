@@ -215,6 +215,28 @@ def pokeemerald_pal_define(file_path, overworld_name):
         f.truncate()
 
 
+def write_graphics_info(file, overworld_name, pal_tag, reflection_palette_tag, size, width, height, palette_slot, shadow_size, inanimate, tracks, anim_table, extra_field):
+    file.write(f"""
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_{overworld_name} = {{
+    .tileTag = TAG_NONE,
+    .paletteTag = {pal_tag},
+    .reflectionPaletteTag = {reflection_palette_tag},
+    .size = {size},
+    .width = {width},
+    .height = {height},
+    .paletteSlot = {palette_slot},
+    .shadowSize = {shadow_size},
+    .inanimate = {inanimate},
+    {extra_field}
+    .tracks = {tracks},
+    .oam = &gObjectEventBaseOam_{width}x{height},
+    .subspriteTables = sOamTables_{width}x{height},
+    .anims = sAnimTable_{anim_table},
+    .images = sPicTable_{overworld_name},
+    .affineAnims = gDummySpriteAffineAnimTable,
+}};
+""")
+
 def insert_overworld(overworld_name, width, height, reflection_palette_tag, size, palette_slot, shadow_size, inanimate, tracks, frame_num, anim_table, pal_tag, disableReflection):
     base_path = config['pkmn_path']['path']
 
@@ -260,50 +282,22 @@ def insert_overworld(overworld_name, width, height, reflection_palette_tag, size
     with open(pic_tables_file, 'a') as f:
         f.write(f'\nstatic const struct SpriteFrameImage sPicTable_{overworld_name}[] = {{\n{frames}\n}};\n')
 
-    if dynamic_pal_system == 'True' or project_version == 'Poke-expansion':
-        with open(graphics_info_file, 'a') as f:
-            f.write(f"""
-    const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_{overworld_name} = {{
-        .tileTag = TAG_NONE,
-        .paletteTag = OBJ_EVENT_PAL_TAG_{overworld_name.upper()},
-        .reflectionPaletteTag = {reflection_palette_tag},
-        .size = {size},
-        .width = {width},
-        .height = {height},
-        .paletteSlot = {palette_slot},
-        .shadowSize = {shadow_size},
-        .inanimate = {inanimate},
-        .compressed = FALSE,
-        .tracks = {tracks},
-        .oam = &gObjectEventBaseOam_{width}x{height},
-        .subspriteTables = sOamTables_{width}x{height},
-        .anims = sAnimTable_{anim_table},
-        .images = sPicTable_{overworld_name},
-        .affineAnims = gDummySpriteAffineAnimTable,
-    }};
-    """)
-    else:
-        with open(graphics_info_file, 'a') as f:
-            f.write(f"""
-    const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_{overworld_name} = {{
-        .tileTag = TAG_NONE,
-        .paletteTag = OBJ_EVENT_PAL_TAG_{pal_tag},
-        .reflectionPaletteTag = {reflection_palette_tag},
-        .size = {size},
-        .width = {width},
-        .height = {height},
-        .paletteSlot = {palette_slot},
-        .shadowSize = {shadow_size},
-        .inanimate = {inanimate},
-        .disableReflectionPaletteLoad = {disableReflection},
-        .tracks = {tracks},
-        .oam = &gObjectEventBaseOam_{width}x{height},
-        .subspriteTables = sOamTables_{width}x{height},
-        .anims = sAnimTable_{anim_table},
-        .images = sPicTable_{overworld_name},
-        .affineAnims = gDummySpriteAffineAnimTable,
-    }};
-    """)
+    with open(graphics_info_file, 'a') as f:
+        if project_version == 'Poke-expansion':
+            write_graphics_info(
+                f, overworld_name, f'OBJ_EVENT_PAL_TAG_{overworld_name.upper()}', reflection_palette_tag,
+                size, width, height, palette_slot, shadow_size, inanimate, tracks, anim_table, '.compressed = FALSE,'
+            )
+        elif project_version == 'Pokeemerald':
+            if dynamic_pal_system == 'True':
+                pal_tag = f'OBJ_EVENT_PAL_TAG_{overworld_name.upper()}'
+            else:
+                pal_tag = f'OBJ_EVENT_PAL_TAG_{pal_tag.upper()}'
+            write_graphics_info(
+                f, overworld_name, pal_tag, reflection_palette_tag, size, width, height, palette_slot,
+                shadow_size, inanimate, tracks, anim_table, f'.disableReflectionPaletteLoad = {disableReflection},'
+            )
+
 
     insert_after_line_number(pointers_file, 0, f'extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_{overworld_name};')
     insert_line_in_structure(pointers_file, 'const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM_OBJ_EVENT_GFX]', f'[OBJ_EVENT_GFX_{overworld_name.upper()}] = &gObjectEventGraphicsInfo_{overworld_name},')

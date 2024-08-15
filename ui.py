@@ -247,7 +247,7 @@ with dpg.window(tag="primary_window", label="Insert Overworld", width=540, heigh
         dpg.add_text("Compatible expansion version: 1.9.0", tag="expansion_ver_txt")
 
     dpg.add_spacer(height=20)
-    dpg.add_text("AOA 0.3.2 By Nexxo", pos=(380, 10))
+    dpg.add_text("AOA 0.3.3 By Nexxo", pos=(380, 10))
 
 dpg.bind_theme("purple_theme")
 
