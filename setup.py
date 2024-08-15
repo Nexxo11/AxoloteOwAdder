@@ -28,7 +28,7 @@ executables = [
 
 setup(
     name="AxoloteOwAdder",
-    version="0.3.2",
+    version="0.3.3",
     description="Aplicación para añadir Overworlds",
     options={"build_exe": build_exe_options},
     executables=executables
