@@ -27,8 +27,7 @@ Is a tool for adding and configuring overworld events in the Pokeemerald
     The tool will be ready to use.
 
 ## Build
-1. Install pyinstaller
 
-2. Use this command
+1. pip install cx_Freeze
 
-   pyinstaller --noconfirm --onedir --windowed --icon "AxoloteOwAdder\icon.ico" --name "AxoloteOwAdder" --add-data "AxoloteOwAdder\src;src/"  "AxoloteOwAdder\ui.py"
+2. python setup.py build
