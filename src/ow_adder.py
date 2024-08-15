@@ -352,7 +352,7 @@ def insert_overworld_gui():
                 )
                 if project_version == 'Poke-expansion':
                     dpg.set_value("status_text", f"            The new overworld has been successfully inserted.\n                          GfxID: {define_overworld_id}  PalID: 0x{define_overworld_hex_id:04X}")
-                if project_version == 'Pokeemerald' and dynamic_pal_system == 'True':
+                elif project_version == 'Pokeemerald' and dynamic_pal_system == 'True':
                     dpg.set_value("status_text", f"            The new overworld has been successfully inserted.\n                          GfxID: {define_overworld_id}  PalID: 0x{define_pal_emerald_hex_id:04X}")
                 else:
                     dpg.set_value("status_text", f"            The new overworld has been successfully inserted.\n                          GfxID: {define_overworld_id}  OBJ_EVENT_PAL_TAG_{pal_tag}")
