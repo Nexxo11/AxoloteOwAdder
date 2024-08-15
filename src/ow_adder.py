@@ -60,8 +60,6 @@ def select_and_move_sprite():
     sprite_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png;*")])
 
     if sprite_path:
-
-
         if dpg.does_item_exist("sprite_image"):
             dpg.delete_item("sprite_image")
         if dpg.does_item_exist("sprite_texture"):
