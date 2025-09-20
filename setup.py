@@ -1,5 +1,8 @@
 from cx_Freeze import setup, Executable
 
+with open("ver.txt", "r") as f:
+    version = f.read().strip()
+
 build_exe_options = {
     "packages": [
         "configparser",
@@ -13,14 +16,15 @@ build_exe_options = {
     "excludes": [],
     "include_files": [
         ("icon.ico", "icon.ico"),
-        ("src/translate.json", "src/translate.json"),
-        ("src/ver.txt", "src/ver.txt")
+        ("translations/en.json", "translations/en.json"),
+        ("translations/es.json", "translations/es.json"),
+        ("ver.txt", "ver.txt")
     ]
 }
 
 executables = [
     Executable(
-        "ui.py",    
+        "main.py",    
         base="Win32GUI",  
         icon="icon.ico"
     )
@@ -28,7 +32,7 @@ executables = [
 
 setup(
     name="AxoloteOwAdder",
-    version="0.3.3",
+    version=version,
     description="Aplicación para añadir Overworlds",
     options={"build_exe": build_exe_options},
     executables=executables
