@@ -1,6 +1,6 @@
 import configparser
 import dearpygui.dearpygui as dpg
-from core.defines import get_next_define_number, get_next_pal_tag_define_number, pokeemerald_pal_define, update_num_obj_event_gfx
+from core.defines import get_next_define_number, get_next_pal_tag_define_number, pokeemerald_pal_define, update_num_obj_event_gfx, define_pal_emerald_hex_id
 from utils.file_system import insert_after_line_number, insert_line_in_structure
 
 config = configparser.ConfigParser()
