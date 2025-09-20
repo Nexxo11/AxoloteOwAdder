@@ -18,7 +18,8 @@ build_exe_options = {
         ("icon.ico", "icon.ico"),
         ("translations/en.json", "translations/en.json"),
         ("translations/es.json", "translations/es.json"),
-        ("ver.txt", "ver.txt")
+        ("ver.txt", "ver.txt"),
+        ("path.ini", "path.ini")
     ]
 }
 

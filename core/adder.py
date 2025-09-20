@@ -112,6 +112,7 @@ def insert_overworld(overworld_name, width, height, reflection_palette_tag, size
         f.write(f'\t$(GFX) $< $@ -mwidth {width//8} -mheight {height//8}\n')
 
 def insert_overworld_gui(translator):
+    config.read('path.ini')
     overworld_name = dpg.get_value("overworld_name")
     #overworld_id = int(dpg.get_value("overworld_id"))
     #palette_id = int(dpg.get_value("palette_id"), 16)
