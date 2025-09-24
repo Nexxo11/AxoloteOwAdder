@@ -1,6 +1,6 @@
 import configparser
 import dearpygui.dearpygui as dpg
-from core.defines import get_next_define_number, get_next_pal_tag_define_number, pokeemerald_pal_define, update_num_obj_event_gfx, define_pal_emerald_hex_id
+from core import defines
 from utils.file_system import insert_after_line_number, insert_line_in_structure
 
 config = configparser.ConfigParser()
@@ -39,8 +39,8 @@ def insert_overworld(overworld_name, width, height, reflection_palette_tag, size
     movement_file = f"{base_path}/src/event_object_movement.c"
     spritesheet_rules_file = f"{base_path}/spritesheet_rules.mk"
 
-    next_define_id = get_next_define_number(defines_file)
-    next_define_hex_id = get_next_pal_tag_define_number(defines_file)
+    next_define_id = defines.get_next_define_number(defines_file)
+    next_define_hex_id = defines.get_next_pal_tag_define_number(defines_file)
 
     global define_overworld_id
     global define_overworld_hex_id
@@ -67,7 +67,7 @@ def insert_overworld(overworld_name, width, height, reflection_palette_tag, size
             lines.insert(endif_index + 1, f'#define OBJ_EVENT_PAL_TAG_{overworld_name.upper()} 0x{next_define_hex_id:04X}\n')
         elif project_version == 'Pokeemerald' and dynamic_pal_system == 'True':
             lines.insert(endif_index, f'#define OBJ_EVENT_GFX_{overworld_name.upper()} {next_define_id}\n')
-            pokeemerald_pal_define(defines_file, overworld_name.upper())
+            defines.pokeemerald_pal_define(defines_file, overworld_name.upper())
         elif project_version == 'Pokeemerald' and dynamic_pal_system == 'False':
             lines.insert(endif_index, f'#define OBJ_EVENT_GFX_{overworld_name.upper()} {next_define_id}\n')
 
@@ -81,7 +81,7 @@ def insert_overworld(overworld_name, width, height, reflection_palette_tag, size
 
     frames = "\n".join([f'    overworld_frame(gObjectEventPic_{overworld_name}, {width//8}, {height//8}, {i}),' for i in range(frame_num)])
     with open(pic_tables_file, 'a') as f:
-        f.write(f'\nstatic const struct SpriteFrameImage sPicTable_{overworld_name}[] = {{\n{frames}\n}};\n')
+                f.write(f'\nstatic const struct SpriteFrameImage sPicTable_{overworld_name}[] = {{\n{frames}\n}};')
 
     with open(graphics_info_file, 'a') as f:
         if project_version == 'Poke-expansion':
@@ -146,11 +146,11 @@ def insert_overworld_gui(translator):
                     reflection_palette_tag, size, palette_slot, shadow_size, 
                     inanimate, tracks, frame_num, anim_table, pal_tag, disableReflection
                 )
-                new_value = update_num_obj_event_gfx()
+                new_value = defines.update_num_obj_event_gfx()
                 if project_version == 'Poke-expansion':
                     dpg.set_value("status_text", f"{translator.get_text('overworld_inserted')}\n                          GfxID: {define_overworld_id}  PalID: 0x{define_overworld_hex_id:04X}\n{translator.get_text('num_obj_event_gfx_updated')} {new_value}")
                 elif project_version == 'Pokeemerald' and dynamic_pal_system == 'True':
-                    dpg.set_value("status_text", f"{translator.get_text('overworld_inserted')}\n                          GfxID: {define_overworld_id}  PalID: 0x{define_pal_emerald_hex_id:04X}\n{translator.get_text('num_obj_event_gfx_updated')} {new_value}")
+                    dpg.set_value("status_text", f"{translator.get_text('overworld_inserted')}\n                          GfxID: {define_overworld_id}  PalID: 0x{defines.define_pal_emerald_hex_id:04X}\n{translator.get_text('num_obj_event_gfx_updated')} {new_value}")
                 else:
                     dpg.set_value("status_text", f"{translator.get_text('overworld_inserted')}\n                          GfxID: {define_overworld_id}  OBJ_EVENT_PAL_TAG_{pal_tag}\n{translator.get_text('num_obj_event_gfx_updated')} {new_value}")
         except Exception as e:

@@ -3,6 +3,8 @@ import configparser
 config = configparser.ConfigParser()
 config.read('path.ini')
 
+define_pal_emerald_hex_id = 0
+
 def get_next_define_number(file_path):
     with open(file_path, 'r') as file:
         lines = file.readlines()
