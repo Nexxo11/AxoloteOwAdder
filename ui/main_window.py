@@ -57,16 +57,17 @@ class MainWindow:
 
     def setup_main_window(self):
         with dpg.window(tag="primary_window", label="Insert Overworld", width=540, height=580, no_title_bar=True, no_resize=True, no_move=True):
-            dpg.add_button(label="Translate", callback=self.translator.toggle_language, tag="translate_button")
-            dpg.add_text("", tag="footer_text", pos=(380, 10))
-
+            dpg.add_button(label="Select project Folder", callback=lambda: select_folder(self.translator), tag="select_folder_button")
+            dpg.add_text("If you have a path file config, you don't need to load it again", tag="folder_path_text", color=(150, 150, 150))
+            # dpg.add_spacer(height=10)
+            dpg.add_separator()
             with dpg.group(horizontal=True):
+                dpg.add_button(label="Translate", callback=self.translator.toggle_language, tag="translate_button")
+                dpg.add_spacer(width=2)
                 dpg.add_button(label="Check for Updates", callback=lambda: verify_version(self.translator), tag="verify_version")
                 dpg.add_text("", tag="ver_status_text")
             
-            dpg.add_button(label="Select project Folder", callback=lambda: select_folder(self.translator), tag="select_folder_button")
-
-            dpg.add_text("If you have a path file config, you don't need to load it again", tag="folder_path_text", color=(150, 150, 150))
+            dpg.add_text("", tag="footer_text", pos=(380, 10))
             dpg.add_spacer(height=10)
             dpg.add_separator()
             dpg.add_spacer(height=10)
@@ -162,7 +163,10 @@ class MainWindow:
                 dpg.add_spacer(width=10)
                 dpg.add_button(label="Delete LAST Overworld", callback=lambda: show_delete_confirmation(self.translator), width=200, tag="delete_button")
 
-            dpg.add_text("", tag="status_text")
+            dpg.add_separator()
+            with dpg.group(tag="status_panel"):
+                dpg.add_text("", tag="status_text")
+            dpg.add_separator()
             with dpg.group(horizontal=True):
                 dpg.add_spacer(width=120)
                 dpg.add_text("Compatible expansion version: 1.13.1", tag="expansion_ver_txt")

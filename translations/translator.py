@@ -28,7 +28,6 @@ class Translator:
 
     def update_texts(self):
         dpg.set_item_label('select_folder_button', self.get_text('select_folder_button'))
-        dpg.set_value('folder_path_text', self.get_text('folder_path_text'))
         dpg.set_item_label('select_ow_button', self.get_text('select_ow_button'))
         dpg.set_value('sprite_txt_preview', self.get_text('sprite_txt_preview'))
         dpg.set_value('overworld_txt_name', self.get_text('overworld_txt_name'))

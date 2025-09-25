@@ -1,6 +1,5 @@
 {
-    "select_folder_button": "Seleccionar carpeta pokeemerald-expansion",
-    "folder_path_text": "Si ya cargaste anteriormente, no necesitas cargarlo de nuevo",
+    "select_folder_button": "Seleccionar carpeta",
     "select_ow_button": "Cargar Nuevo Overworld",
     "sprite_txt_preview": "Vista previa del sprite",
     "overworld_txt_name": "Nombre del overworld",
@@ -15,8 +14,8 @@
     "inanimate_txt": "Inanimado",
     "tracks_txt": "Huellas",
     "insert_button": "Insertar Overworld",
-    "delete_button": "Eliminar Overworld",
-    "expansion_ver_txt": "Versión de expansión compatible: 1.12.2",
+    "delete_button": "Eliminar Ultimo Overworld",
+    "expansion_ver_txt": "Versión de expansión compatible: 1.13.1",
     "pokeemerald_options": "Opciones Pokeemerald",
     "pal_tag_txt": "Seleccionar Paleta (No DPS)",
     "disableReflection_txt": "Desactivar Reflejo",

@@ -167,12 +167,18 @@ def insert_overworld_gui(translator):
                 inanimate, tracks, frame_num, anim_table, pal_tag, disableReflection
             )
             new_value = defines.update_num_obj_event_gfx()
+            success_msg = translator.get_text('overworld_inserted')
+            update_msg = f"{translator.get_text('num_obj_event_gfx_updated')} {new_value}"
+
             if project_version == 'Poke-expansion':
-                dpg.set_value("status_text", f"{translator.get_text('overworld_inserted')}\n                          GfxID: {define_overworld_id}  PalID: 0x{define_overworld_hex_id:04X}\n{translator.get_text('num_obj_event_gfx_updated')} {new_value}")
+                info_msg = f"GfxID: {define_overworld_id}\nPalID: 0x{define_overworld_hex_id:04X}"
+                dpg.set_value("status_text", f"{success_msg}\n{info_msg}\n{update_msg}")
             elif project_version == 'Pokeemerald' and dynamic_pal_system == 'True':
-                dpg.set_value("status_text", f"{translator.get_text('overworld_inserted')}\n                          GfxID: {define_overworld_id}  PalID: 0x{defines.define_pal_emerald_hex_id:04X}\n{translator.get_text('num_obj_event_gfx_updated')} {new_value}")
+                info_msg = f"GfxID: {define_overworld_id}\nPalID: 0x{defines.define_pal_emerald_hex_id:04X}"
+                dpg.set_value("status_text", f"{success_msg}\n{info_msg}\n{update_msg}")
             else:
-                dpg.set_value("status_text", f"{translator.get_text('overworld_inserted')}\n                          GfxID: {define_overworld_id}  OBJ_EVENT_PAL_TAG_{pal_tag}\n{translator.get_text('num_obj_event_gfx_updated')} {new_value}")
+                info_msg = f"GfxID: {define_overworld_id}\nPalette: OBJ_EVENT_PAL_TAG_{pal_tag}"
+                dpg.set_value("status_text", f"{success_msg}\n{info_msg}\n{update_msg}")
     except Exception as e:
         dpg.set_value("status_text", f"{translator.get_text('error_inserting_overworld')}{e}")
 
