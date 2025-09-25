@@ -30,7 +30,7 @@ executables = [
         icon="icon.ico"
     )
 ]
-
+# https://www.mediafire.com/file/yc33jlmm0iz8l8s/AxoloteOwAdder_Linux_0_4_1.rar/file
 setup(
     name="AxoloteOwAdder",
     version=version,
