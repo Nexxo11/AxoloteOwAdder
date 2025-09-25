@@ -4,7 +4,7 @@ from core.config import select_folder
 from core.sprite import select_and_move_sprite
 from core.version import verify_version
 from .themes import setup_theme
-from .popups import setup_popups
+from .popups import setup_popups, show_delete_confirmation
 from .tooltips import setup_tooltips
 
 class MainWindow:
@@ -157,13 +157,15 @@ class MainWindow:
 
             dpg.add_spacer(height=15)
             with dpg.group(horizontal=True):
-                dpg.add_spacer(width=146)
+                dpg.add_spacer(width=50)
                 dpg.add_button(label="Insert Overworld", callback=lambda: insert_overworld_gui(self.translator), width=200, tag="insert_button")
+                dpg.add_spacer(width=10)
+                dpg.add_button(label="Delete LAST Overworld", callback=lambda: show_delete_confirmation(self.translator), width=200, tag="delete_button")
 
             dpg.add_text("", tag="status_text")
             with dpg.group(horizontal=True):
                 dpg.add_spacer(width=120)
-                dpg.add_text("Compatible expansion version: 1.12.2", tag="expansion_ver_txt")
+                dpg.add_text("Compatible expansion version: 1.13.1", tag="expansion_ver_txt")
 
             dpg.add_spacer(height=20)
-            dpg.add_text("AOA 0.4.0 By Nexxo", pos=(380, 10))
+            dpg.add_text("AOA 0.4.1 By Nexxo", pos=(380, 10))

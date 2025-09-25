@@ -75,18 +75,28 @@ def update_num_obj_event_gfx():
     base_path = config['pkmn_path']['path']
     file_path = f"{base_path}/include/constants/event_objects.h"
 
-    with open(file_path, 'r') as file:
-        lines = file.readlines()
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+    except FileNotFoundError:
+        return -1
+
+    gfx_count = 0
+    num_gfx_line_index = -1
+    
+    for i, line in enumerate(lines):
+        if line.strip().startswith("#define OBJ_EVENT_GFX_"):
+            gfx_count += 1
+        
+        if line.strip().startswith("#define NUM_OBJ_EVENT_GFX"):
+            num_gfx_line_index = i
 
     new_value = -1
-    for i, line in enumerate(lines):
-        if line.strip().startswith("#define NUM_OBJ_EVENT_GFX"):
-            parts = line.split()
-            current_value = int(parts[2])
-            new_value = current_value + 1
-            lines[i] = f"#define NUM_OBJ_EVENT_GFX {new_value}\n"
-            break
-
-    with open(file_path, 'w') as file:
-        file.writelines(lines)
+    if num_gfx_line_index != -1:
+        new_value = gfx_count
+        lines[num_gfx_line_index] = f"#define NUM_OBJ_EVENT_GFX {new_value}\n"
+        
+        with open(file_path, 'w', encoding='utf-8') as file:
+            file.writelines(lines)
+            
     return new_value
