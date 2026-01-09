@@ -14,7 +14,7 @@
     "inanimate_txt": "Inanimado",
     "tracks_txt": "Huellas",
     "insert_button": "Insertar Overworld",
-    "delete_button": "Eliminar Ultimo Overworld",
+    "delete_button": "Eliminar Overworld",
     "expansion_ver_txt": "Versión de expansión compatible: 1.13.1",
     "pokeemerald_options": "Opciones Pokeemerald",
     "pal_tag_txt": "Seleccionar Paleta (No DPS)",
@@ -41,5 +41,8 @@
     "delete_not_found": "Error: No se encontró el overworld '{name}'. No se puede eliminar.",
     "translate_tooltip": "Haz clic para traducir la interfaz a español o inglés.",
     "translate_button": "Traducir",
+    "theme_label": "Tema",
+    "theme_purple": "Morado",
+    "theme_light": "Claro",
     "num_obj_event_gfx_updated": "NUM_OBJ_EVENT_GFX ha sido actualizado a"
 }

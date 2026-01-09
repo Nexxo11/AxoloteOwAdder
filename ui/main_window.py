@@ -1,9 +1,9 @@
 import dearpygui.dearpygui as dpg
-from core.adder import insert_overworld_gui
+from core.adder import insert_overworld_gui, get_custom_overworlds
 from core.config import select_folder
 from core.sprite import select_and_move_sprite
 from core.version import verify_version
-from .themes import setup_theme
+from .themes import setup_themes, apply_theme, DEFAULT_THEME_KEY, get_theme_label_key
 from .popups import setup_popups, show_delete_confirmation
 from .tooltips import setup_tooltips
 
@@ -50,7 +50,8 @@ class MainWindow:
             "NONE"
         ]
 
-        setup_theme()
+        setup_themes()
+        apply_theme(DEFAULT_THEME_KEY)
         self.setup_main_window()
         setup_popups(self.translator)
         setup_tooltips()
@@ -66,6 +67,33 @@ class MainWindow:
                 dpg.add_spacer(width=2)
                 dpg.add_button(label="Check for Updates", callback=lambda: verify_version(self.translator), tag="verify_version")
                 dpg.add_text("", tag="ver_status_text")
+
+            with dpg.group(horizontal=True):
+                dpg.add_spacer(width=300)
+                dpg.add_text(self.translator.get_text("theme_label"), tag="theme_label")
+
+                def _on_theme_change(sender, app_data):
+                    theme_map = {
+                        self.translator.get_text("theme_purple"): "purple",
+                        self.translator.get_text("theme_light"): "light",
+                    }
+                    theme_key = theme_map.get(app_data, DEFAULT_THEME_KEY)
+                    dpg.set_item_user_data("theme_select", {"theme_key": theme_key})
+                    apply_theme(theme_key)
+
+                theme_items = [
+                    self.translator.get_text("theme_purple"),
+                    self.translator.get_text("theme_light"),
+                ]
+                default_theme_display = self.translator.get_text(get_theme_label_key(DEFAULT_THEME_KEY))
+                dpg.add_combo(
+                    items=theme_items,
+                    tag="theme_select",
+                    default_value=default_theme_display,
+                    width=120,
+                    callback=_on_theme_change,
+                )
+                dpg.set_item_user_data("theme_select", {"theme_key": DEFAULT_THEME_KEY})
             
             dpg.add_text("", tag="footer_text", pos=(380, 10))
             dpg.add_spacer(height=10)
@@ -89,6 +117,27 @@ class MainWindow:
             with dpg.group(horizontal=True):
                 dpg.add_spacer(width=146)
                 dpg.add_input_text(tag="overworld_name", width=200)
+
+            dpg.add_spacer(height=5)
+            with dpg.group(horizontal=True):
+                dpg.add_spacer(width=146)
+                
+                def _update_name_from_combo(sender, app_data):
+                    dpg.set_value("overworld_name", app_data)
+
+                def _refresh_overworld_list():
+                    ows = get_custom_overworlds()
+                    dpg.configure_item("installed_overworlds_combo", items=ows)
+                    # dpg.set_value("status_text", "Overworld list refreshed.")
+
+                dpg.add_combo(items=[], tag="installed_overworlds_combo", width=170, callback=_update_name_from_combo, default_value="Select Installed...")
+                dpg.add_button(label="🔄", width=30, callback=_refresh_overworld_list, tag="refresh_list_btn")
+            
+            # Initial load attempt (will only work if path is already set)
+            try:
+                _refresh_overworld_list()
+            except:
+                pass
 
             dpg.add_spacer(height=10)
             dpg.add_separator()
@@ -161,7 +210,7 @@ class MainWindow:
                 dpg.add_spacer(width=50)
                 dpg.add_button(label="Insert Overworld", callback=lambda: insert_overworld_gui(self.translator), width=200, tag="insert_button")
                 dpg.add_spacer(width=10)
-                dpg.add_button(label="Delete LAST Overworld", callback=lambda: show_delete_confirmation(self.translator), width=200, tag="delete_button")
+                dpg.add_button(label="Delete Overworld", callback=lambda: show_delete_confirmation(self.translator), width=200, tag="delete_button")
 
             dpg.add_separator()
             with dpg.group(tag="status_panel"):

@@ -1,6 +1,7 @@
 import dearpygui.dearpygui as dpg
 import json
 import os
+from ui.themes import DEFAULT_THEME_KEY, get_theme_label_key
 
 class Translator:
     def __init__(self):
@@ -48,3 +49,15 @@ class Translator:
         dpg.set_value('disableReflection_txt', self.get_text('disableReflection_txt'))
         dpg.set_value('translate_tooltip_text', self.get_text('translate_tooltip'))
         dpg.set_item_label('translate_button', self.get_text('translate_button'))
+        if dpg.does_item_exist("theme_label"):
+            dpg.set_value("theme_label", self.get_text("theme_label"))
+        if dpg.does_item_exist("theme_select"):
+            user_data = dpg.get_item_user_data("theme_select")
+            theme_key = DEFAULT_THEME_KEY
+            if isinstance(user_data, dict) and "theme_key" in user_data:
+                theme_key = user_data["theme_key"]
+            dpg.configure_item(
+                "theme_select",
+                items=[self.get_text("theme_purple"), self.get_text("theme_light")],
+            )
+            dpg.set_value("theme_select", self.get_text(get_theme_label_key(theme_key)))

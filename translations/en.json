@@ -41,5 +41,8 @@
     "delete_not_found": "Error: Overworld '{name}' not found. Cannot delete.",
     "translate_tooltip": "Click to translate the UI to Spanish or English.",
     "translate_button": "Translate",
+    "theme_label": "Theme",
+    "theme_purple": "Purple",
+    "theme_light": "Light",
     "num_obj_event_gfx_updated": "NUM_OBJ_EVENT_GFX has been updated to"
 }

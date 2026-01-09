@@ -1,10 +1,21 @@
 import configparser
+import shutil
+import os
 import dearpygui.dearpygui as dpg
 from core import defines
 from utils.file_system import insert_after_line_number, insert_line_in_structure
 
 config = configparser.ConfigParser()
 config.read('path.ini')
+
+def create_backups(file_paths):
+    """Creates a backup (.bak) of the specified files."""
+    for file_path in file_paths:
+        try:
+            if os.path.exists(file_path):
+                shutil.copy(file_path, f"{file_path}.bak")
+        except Exception as e:
+            print(f"Warning: Could not create backup for {file_path}: {e}")
 
 def write_graphics_info(file, overworld_name, pal_tag, reflection_palette_tag, size, width, height, palette_slot, shadow_size, inanimate, tracks, anim_table, extra_field):
     file.write(f"""
@@ -39,6 +50,12 @@ def insert_overworld(overworld_name, width, height, reflection_palette_tag, size
     pointers_file = f"{base_path}/src/data/object_events/object_event_graphics_info_pointers.h"
     movement_file = f"{base_path}/src/event_object_movement.c"
     spritesheet_rules_file = f"{base_path}/spritesheet_rules.mk"
+
+    # Create backups before modification
+    create_backups([
+        defines_file, object_events_file, pic_tables_file, 
+        graphics_info_file, pointers_file, movement_file, spritesheet_rules_file
+    ])
 
     next_define_id = defines.get_next_define_number(defines_file)
     next_define_hex_id = defines.get_next_pal_tag_define_number(defines_file)
@@ -123,6 +140,38 @@ def overworld_exists(overworld_name):
     except FileNotFoundError:
         return False
     return False
+
+def get_custom_overworlds():
+    """Scans the event_objects.h file to find overworld definitions."""
+    overworlds = []
+    base_path = config['pkmn_path'].get('path', '')
+    if not base_path:
+        return []
+        
+    defines_file = f"{base_path}/include/constants/event_objects.h"
+    
+    try:
+        with open(defines_file, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+            
+        for line in lines:
+            line = line.strip()
+            # Look for #define OBJ_EVENT_GFX_NAME Value
+            if line.startswith("#define OBJ_EVENT_GFX_"):
+                parts = line.split()
+                if len(parts) >= 2:
+                    define_name = parts[1]
+                    # Extract NAME from OBJ_EVENT_GFX_NAME
+                    name = define_name.replace("OBJ_EVENT_GFX_", "").lower()
+                    # Filter out standard system defines if necessary, 
+                    # but usually custom ones are appended.
+                    # Simple heuristic: Only return those that likely match user input format
+                    overworlds.append(name)
+                    
+    except FileNotFoundError:
+        pass
+        
+    return sorted(overworlds)
 
 def insert_overworld_gui(translator):
     config.read('path.ini')
@@ -244,6 +293,12 @@ def delete_overworld(overworld_name, translator):
         pointers_file = f"{base_path}/src/data/object_events/object_event_graphics_info_pointers.h"
         movement_file = f"{base_path}/src/event_object_movement.c"
         spritesheet_rules_file = f"{base_path}/spritesheet_rules.mk"
+
+        # Create backups before modification
+        create_backups([
+            defines_file, object_events_file, pic_tables_file, 
+            graphics_info_file, pointers_file, movement_file, spritesheet_rules_file
+        ])
 
         defines_to_remove = [f"OBJ_EVENT_GFX_{overworld_name.upper()}"]
         if project_version == 'Poke-expansion' or dynamic_pal_system == 'True':

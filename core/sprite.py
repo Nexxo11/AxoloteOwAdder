@@ -28,7 +28,7 @@ def select_and_move_sprite(translator):
             if not os.path.exists(destination_folder):
                 os.makedirs(destination_folder)
             destination_path = os.path.join(destination_folder, os.path.basename(sprite_path))
-            shutil.move(sprite_path, destination_path)
+            shutil.copy(sprite_path, destination_path)
 
             if os.path.exists(destination_path):
                 try:
