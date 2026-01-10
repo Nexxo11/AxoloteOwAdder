@@ -78,7 +78,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-Nexxo - [@Nexxo11](https://twitter.com/Nexxo11)
+Nexxo - [@nexxo177](https://twitter.com/@nexxo177)
 
 Project Link:  
 https://github.com/Nexxo11/AxoloteOwAdder
