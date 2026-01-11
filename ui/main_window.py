@@ -2,7 +2,7 @@ import dearpygui.dearpygui as dpg
 from core.adder import insert_overworld_gui, get_custom_overworlds, restore_backups
 from core.config import select_folder
 from core.sprite import select_and_move_sprite
-from core.version import verify_version
+from core.version import verify_version, check_project_compatibility
 from .themes import (
     setup_themes,
     apply_theme,
@@ -367,6 +367,7 @@ class MainWindow:
                     saved_path = config['pkmn_path']['path']
                     if saved_path:
                         dpg.set_value("folder_path_text", f"{self.translator.get_text('selected_path')}{saved_path}")
+                        check_project_compatibility(saved_path, self.translator)
                 
                 _refresh_overworld_list()
             except Exception as e:

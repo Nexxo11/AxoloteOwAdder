@@ -2,6 +2,7 @@ import configparser
 import tkinter as tk
 from tkinter import filedialog
 import dearpygui.dearpygui as dpg
+from core.version import check_project_compatibility
 
 config = configparser.ConfigParser()
 config.read('path.ini')
@@ -21,6 +22,10 @@ def select_folder(translator):
             with open('path.ini', 'w') as configfile:
                 config.write(configfile)
             dpg.set_value("folder_path_text", f"{translator.get_text('selected_path')}{folder_selected}")
+            
+            # Check compatibility
+            check_project_compatibility(folder_selected, translator)
+            
             dpg.configure_item("popup_window", show=True)
         except PermissionError:
             print(translator.get_text('permission_denied'))

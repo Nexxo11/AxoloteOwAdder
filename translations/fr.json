@@ -65,5 +65,8 @@
     "lang_en": "Anglais",
     "lang_es": "Espagnol",
     "lang_pt": "Portugais",
-    "lang_fr": "Français"
+    "lang_fr": "Français",
+    "compat_unknown": "Version inconnue / README manquant",
+    "compat_compatible": "Compatible ({version})",
+    "compat_incompatible": "Incompatible (< 1.9.1) ({version})"
 }
