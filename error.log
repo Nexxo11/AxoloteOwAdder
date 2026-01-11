@@ -1,8 +1,9 @@
 Traceback (most recent call last):
-  File "e:\Programacion\Decomp\Recursos\AxoloteOwAdder\main.py", line 10, in <module>
-    main_window = MainWindow(translator)
-  File "e:\Programacion\Decomp\Recursos\AxoloteOwAdder\ui\main_window.py", line 23, in __init__
-    setup_themes()
-  File "e:\Programacion\Decomp\Recursos\AxoloteOwAdder\ui\themes.py", line 91, in setup_themes
-    dpg.add_theme_color(dpg.mvThemeCol_TextSelected, (255, 255, 255)) # White text when selected
-AttributeError: module 'dearpygui.dearpygui' has no attribute 'mvThemeCol_TextSelected'
+  File "e:\Programacion\Decomp\Recursos\AxoloteOwAdder\ui\main_window.py", line 312, in <lambda>
+    callback=lambda: insert_overworld_gui(self.translator),
+  File "e:\Programacion\Decomp\Recursos\AxoloteOwAdder\core\adder.py", line 232, in insert_overworld_gui
+    dpg.set_value("status_text", f"{translator.get_text('error_inserting_overworld')}{e}")
+  File "C:\Users\Usuario\AppData\Local\Programs\Python\Python310\lib\site-packages\dearpygui\dearpygui.py", line 9548, in set_value
+    return internal_dpg.set_value(item, value, **kwargs)
+SystemError: <built-in function set_value> returned a result with an exception set
+PS E:\Programacion\Decomp\Recursos\AxoloteOwAdder> 

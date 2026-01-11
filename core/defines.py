@@ -71,7 +71,7 @@ def pokeemerald_pal_define(file_path, overworld_name):
     with open(file_path, 'w') as f:
         f.writelines(lines)
 
-def update_num_obj_event_gfx():
+def update_num_obj_event_gfx(increment=True):
     base_path = config['pkmn_path']['path']
     file_path = f"{base_path}/include/constants/event_objects.h"
 
@@ -81,20 +81,29 @@ def update_num_obj_event_gfx():
     except FileNotFoundError:
         return -1
 
-    gfx_count = 0
     num_gfx_line_index = -1
+    current_value = -1
     
     for i, line in enumerate(lines):
-        if line.strip().startswith("#define OBJ_EVENT_GFX_"):
-            gfx_count += 1
-        
         if line.strip().startswith("#define NUM_OBJ_EVENT_GFX"):
             num_gfx_line_index = i
+            # Extract the current number using split
+            parts = line.split()
+            if len(parts) >= 3:
+                try:
+                    # Clean potential comments or extra text in the line
+                    val_str = parts[2].strip()
+                    current_value = int(val_str)
+                except ValueError:
+                    pass
+            break
 
     new_value = -1
-    if num_gfx_line_index != -1:
-        new_value = gfx_count
-        lines[num_gfx_line_index] = f"#define NUM_OBJ_EVENT_GFX {new_value}\n"
+    if num_gfx_line_index != -1 and current_value != -1:
+        new_value = current_value + 1 if increment else current_value - 1
+        # Replace the value in the line, preserving the rest of the line (like spacing/comments)
+        import re
+        lines[num_gfx_line_index] = re.sub(r'\b' + str(current_value) + r'\b', str(new_value), lines[num_gfx_line_index])
         
         with open(file_path, 'w', encoding='utf-8') as file:
             file.writelines(lines)

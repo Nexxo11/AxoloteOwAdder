@@ -8,11 +8,15 @@ def _perform_delete():
     user_data = dpg.get_item_user_data("delete_confirmation_popup")
     overworld_name = user_data["name"]
     translator = user_data["translator"]
+    callback = user_data.get("callback")
     
     dpg.configure_item("delete_confirmation_popup", show=False)
     delete_overworld(overworld_name, translator)
+    
+    if callback:
+        callback()
 
-def show_delete_confirmation(translator):
+def show_delete_confirmation(translator, callback=None):
     """Gets the overworld name from the input and shows the delete confirmation modal."""
     overworld_name = dpg.get_value("overworld_name")
     if not overworld_name.strip():
@@ -21,7 +25,11 @@ def show_delete_confirmation(translator):
 
     confirm_text = translator.get_text('delete_confirm_text').format(name=overworld_name)
     dpg.set_value("delete_confirm_text_id", confirm_text)
-    dpg.set_item_user_data("delete_confirmation_popup", {"name": overworld_name, "translator": translator})
+    dpg.set_item_user_data("delete_confirmation_popup", {
+        "name": overworld_name, 
+        "translator": translator,
+        "callback": callback
+    })
     dpg.configure_item("delete_confirmation_popup", show=True)
 
 def setup_popups(translator):

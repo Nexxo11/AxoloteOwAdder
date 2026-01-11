@@ -35,3 +35,5 @@ def setup_tooltips():
         dpg.add_text("if not using Dynamic Pal System.")
     with dpg.tooltip("insert_button"):
         dpg.add_text("Click to insert the overworld into the game.")
+    with dpg.tooltip("refresh_list_btn"):
+        dpg.add_text("Refresh the list of installed overworlds.", tag="refresh_tooltip_text")

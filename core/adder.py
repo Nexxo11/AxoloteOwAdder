@@ -335,7 +335,7 @@ def delete_overworld(overworld_name, translator):
         with open(spritesheet_rules_file, 'w', encoding='utf-8') as f:
             f.writelines(new_lines)
 
-        defines.update_num_obj_event_gfx()
+        defines.update_num_obj_event_gfx(increment=False)
 
         dpg.set_value("status_text", translator.get_text('delete_success').format(name=overworld_name))
 
