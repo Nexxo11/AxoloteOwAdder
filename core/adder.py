@@ -106,15 +106,30 @@ def insert_overworld(overworld_name, width, height, reflection_palette_tag, size
         if 'project_version' in config['pkmn_path']:
             project_version = config['pkmn_path']['project_version']
             dynamic_pal_system = config['pkmn_path']['dynamic_pal_system']
+        else:
+            # Default to Poke-expansion if not specified
+            project_version = 'Poke-expansion'
+            dynamic_pal_system = 'True'
+    else:
+        project_version = 'Poke-expansion'
+        dynamic_pal_system = 'True'
 
     with open(defines_file, 'r') as f:
         lines = f.readlines()
 
     endif_index = -1
+    # Search for the specific guard first
     for i, line in enumerate(lines):
         if line.strip().startswith("#endif") and "GUARD_CONSTANTS_EVENT_OBJECTS_H" in line:
             endif_index = i
             break
+    
+    # Fallback: Find the last #endif if the guard isn't explicit
+    if endif_index == -1:
+        for i in range(len(lines) - 1, -1, -1):
+            if lines[i].strip().startswith("#endif"):
+                endif_index = i
+                break
 
     if endif_index != -1:
         if project_version == 'Poke-expansion':
@@ -122,7 +137,8 @@ def insert_overworld(overworld_name, width, height, reflection_palette_tag, size
             lines.insert(endif_index + 1, f'#define OBJ_EVENT_PAL_TAG_{overworld_name.upper()} 0x{next_define_hex_id:04X}\n')
         elif project_version == 'Pokeemerald' and dynamic_pal_system == 'True':
             lines.insert(endif_index, f'#define OBJ_EVENT_GFX_{overworld_name.upper()} {next_define_id}\n')
-            defines.pokeemerald_pal_define(defines_file, overworld_name.upper())
+            lines.insert(endif_index + 1, f'#define OBJ_EVENT_PAL_TAG_{overworld_name.upper()} 0x{next_define_hex_id:04X}\n')
+            defines.define_pal_emerald_hex_id = next_define_hex_id
         elif project_version == 'Pokeemerald' and dynamic_pal_system == 'False':
             lines.insert(endif_index, f'#define OBJ_EVENT_GFX_{overworld_name.upper()} {next_define_id}\n')
 
@@ -149,9 +165,14 @@ def insert_overworld(overworld_name, width, height, reflection_palette_tag, size
                 pal_tag = f'OBJ_EVENT_PAL_TAG_{overworld_name.upper()}'
             else:
                 pal_tag = f'OBJ_EVENT_PAL_TAG_{pal_tag.upper()}'
+            
+            # Only explicitly write if TRUE. If FALSE, omitting it defaults to 0 (False) in Pokeemerald,
+            # and prevents "no member named..." error in Poke-expansion.
+            extra_field = f'.disableReflectionPaletteLoad = {disableReflection},' if disableReflection == 'TRUE' else ''
+            
             write_graphics_info(
                 f, overworld_name, pal_tag, reflection_palette_tag, size, width, height, palette_slot,
-                shadow_size, inanimate, tracks, anim_table, f'.disableReflectionPaletteLoad = {disableReflection},'
+                shadow_size, inanimate, tracks, anim_table, extra_field
             )
 
 

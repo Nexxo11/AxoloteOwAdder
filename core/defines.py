@@ -60,9 +60,16 @@ def pokeemerald_pal_define(file_path, overworld_name):
 
     endif_index = -1
     for i, line in enumerate(lines):
-        if line.strip() == "#endif // GUARD_CONSTANTS_EVENT_OBJECTS_H":
+        if line.strip().startswith("#endif") and "GUARD_CONSTANTS_EVENT_OBJECTS_H" in line:
             endif_index = i
             break
+            
+    # Fallback
+    if endif_index == -1:
+        for i in range(len(lines) - 1, -1, -1):
+            if lines[i].strip().startswith("#endif"):
+                endif_index = i
+                break
 
     if endif_index != -1:
         new_line = f"#define OBJ_EVENT_PAL_TAG_{overworld_name.upper()} 0x{next_define_hex_id:04X}\n"
