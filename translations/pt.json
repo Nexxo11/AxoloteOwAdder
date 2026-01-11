@@ -47,7 +47,6 @@
     "num_obj_event_gfx_updated": "NUM_OBJ_EVENT_GFX foi atualizado para",
     "refresh_tooltip": "Atualizar a lista de overworlds instalados.",
     "menu_settings": "Configurações",
-    "menu_toggle_language": "Mudar Idioma",
     "menu_theme": "Tema",
     "menu_help": "Ajuda",
     "menu_check_updates": "Verificar Atualizações",
@@ -65,5 +64,6 @@
     "menu_language": "Idioma",
     "lang_en": "Inglês",
     "lang_es": "Espanhol",
-    "lang_pt": "Português"
+    "lang_pt": "Português",
+    "lang_fr": "Francês"
 }

@@ -31,6 +31,7 @@ class Translator:
         if dpg.does_item_exist("lang_en"): dpg.set_item_label('lang_en', self.get_text('lang_en'))
         if dpg.does_item_exist("lang_es"): dpg.set_item_label('lang_es', self.get_text('lang_es'))
         if dpg.does_item_exist("lang_pt"): dpg.set_item_label('lang_pt', self.get_text('lang_pt'))
+        if dpg.does_item_exist("lang_fr"): dpg.set_item_label('lang_fr', self.get_text('lang_fr'))
         if dpg.does_item_exist("menu_theme"): dpg.set_item_label('menu_theme', self.get_text('menu_theme'))
         if dpg.does_item_exist("restore_backups_button"): dpg.set_item_label('restore_backups_button', self.get_text('menu_restore_backups'))
         if dpg.does_item_exist("menu_help"): dpg.set_item_label('menu_help', self.get_text('menu_help'))

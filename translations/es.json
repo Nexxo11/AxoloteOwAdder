@@ -39,7 +39,7 @@
     "delete_success": "El overworld '{name}' se ha eliminado correctamente.",
     "delete_error": "Error al eliminar el overworld '{name}': {error}",
     "delete_not_found": "Error: No se encontró el overworld '{name}'. No se puede eliminar.",
-    "translate_tooltip": "Haz clic para traducir la interfaz a español o inglés.",
+    "translate_tooltip": "Haz clic para cambiar el idioma de la interfaz.",
     "translate_button": "Traducir",
     "theme_label": "Tema",
     "theme_purple": "Morado",
@@ -47,7 +47,6 @@
     "num_obj_event_gfx_updated": "NUM_OBJ_EVENT_GFX ha sido actualizado a",
     "refresh_tooltip": "Actualizar la lista de overworlds instalados.",
     "menu_settings": "Configuración",
-    "menu_toggle_language": "Cambiar Idioma",
     "menu_theme": "Tema",
     "menu_help": "Ayuda",
     "menu_check_updates": "Buscar Actualizaciones",
@@ -65,5 +64,6 @@
     "menu_language": "Idioma",
     "lang_en": "Inglés",
     "lang_es": "Español",
-    "lang_pt": "Portugués"
+    "lang_pt": "Portugués",
+    "lang_fr": "Francés"
 }

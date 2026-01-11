@@ -94,6 +94,7 @@ class MainWindow:
                         dpg.add_menu_item(label=self.translator.get_text("lang_en"), callback=lambda: self.translator.set_language("en"), tag="lang_en")
                         dpg.add_menu_item(label=self.translator.get_text("lang_es"), callback=lambda: self.translator.set_language("es"), tag="lang_es")
                         dpg.add_menu_item(label=self.translator.get_text("lang_pt"), callback=lambda: self.translator.set_language("pt"), tag="lang_pt")
+                        dpg.add_menu_item(label=self.translator.get_text("lang_fr"), callback=lambda: self.translator.set_language("fr"), tag="lang_fr")
                     with dpg.menu(label=self.translator.get_text("menu_theme"), tag="menu_theme"):
                         dpg.add_menu_item(
                             label=self.translator.get_text("theme_purple"),
@@ -126,7 +127,7 @@ class MainWindow:
             vspace(6)
             dpg.add_text(self.translator.get_text("header_project_setup"), tag="header_project_setup", color=(120, 130, 145))
             dpg.add_separator()
-            vspace(4)
+            # vspace(4)
 
             with dpg.group(horizontal=True):
                 dpg.add_button(
