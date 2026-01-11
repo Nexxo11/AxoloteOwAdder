@@ -1,5 +1,5 @@
 import dearpygui.dearpygui as dpg
-from core.adder import insert_overworld_gui, get_custom_overworlds
+from core.adder import insert_overworld_gui, get_custom_overworlds, restore_backups
 from core.config import select_folder
 from core.sprite import select_and_move_sprite
 from core.version import verify_version
@@ -15,6 +15,7 @@ from .popups import setup_popups, show_delete_confirmation
 from .tooltips import setup_tooltips
 from utils.icons import register_icon
 import os
+import configparser
 
 
 class MainWindow:
@@ -72,7 +73,8 @@ class MainWindow:
 
             def _refresh_overworld_list():
                 ows = get_custom_overworlds()
-                dpg.configure_item("installed_overworlds_combo", items=ows)
+                if ows is not None:
+                    dpg.configure_item("installed_overworlds_combo", items=ows)
 
             def _on_theme_change(sender, app_data, user_data):
                 self.current_theme_key = user_data
@@ -106,6 +108,11 @@ class MainWindow:
                             user_data="light",
                             tag="theme_light_item"
                         )
+                    dpg.add_menu_item(
+                        label=self.translator.get_text("menu_restore_backups"),
+                        callback=lambda: restore_backups(self.translator),
+                        tag="restore_backups_button",
+                    )
 
                 with dpg.menu(label=self.translator.get_text("menu_help"), tag="menu_help"):
                     dpg.add_menu_item(
@@ -347,8 +354,15 @@ class MainWindow:
 
             # Initial load
             try:
+                config = configparser.ConfigParser()
+                config.read('path.ini')
+                if config.has_section('pkmn_path') and 'path' in config['pkmn_path']:
+                    saved_path = config['pkmn_path']['path']
+                    if saved_path:
+                        dpg.set_value("folder_path_text", f"{self.translator.get_text('selected_path')}{saved_path}")
+                
                 _refresh_overworld_list()
-            except:
-                pass
+            except Exception as e:
+                print(f"Error during initial load: {e}")
 
             self._bind_action_button_themes()

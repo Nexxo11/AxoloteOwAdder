@@ -17,6 +17,43 @@ def create_backups(file_paths):
         except Exception as e:
             print(f"Warning: Could not create backup for {file_path}: {e}")
 
+def restore_backups(translator):
+    """Restores files from their .bak backups if they exist."""
+    if not config.has_section('pkmn_path') or 'path' not in config['pkmn_path']:
+        dpg.set_value("status_text", translator.get_text('destination_folder_not_set'))
+        return
+
+    base_path = config['pkmn_path']['path']
+    if not base_path:
+        dpg.set_value("status_text", translator.get_text('destination_folder_not_set'))
+        return
+
+    files_to_restore = [
+        f"{base_path}/include/constants/event_objects.h",
+        f"{base_path}/src/data/object_events/object_event_graphics.h",
+        f"{base_path}/src/data/object_events/object_event_pic_tables.h",
+        f"{base_path}/src/data/object_events/object_event_graphics_info.h",
+        f"{base_path}/src/data/object_events/object_event_graphics_info_pointers.h",
+        f"{base_path}/src/event_object_movement.c",
+        f"{base_path}/spritesheet_rules.mk"
+    ]
+
+    restored_count = 0
+    for file_path in files_to_restore:
+        backup_path = f"{file_path}.bak"
+        try:
+            if os.path.exists(backup_path):
+                shutil.copy(backup_path, file_path)
+                os.remove(backup_path)
+                restored_count += 1
+        except Exception as e:
+            print(f"Error restoring {file_path}: {e}")
+
+    if restored_count > 0:
+        dpg.set_value("status_text", translator.get_text('restore_success').format(count=restored_count))
+    else:
+        dpg.set_value("status_text", translator.get_text('restore_no_backups'))
+
 def write_graphics_info(file, overworld_name, pal_tag, reflection_palette_tag, size, width, height, palette_slot, shadow_size, inanimate, tracks, anim_table, extra_field):
     file.write(f"""
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_{overworld_name} =

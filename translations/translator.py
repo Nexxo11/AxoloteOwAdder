@@ -32,6 +32,7 @@ class Translator:
         if dpg.does_item_exist("menu_settings"): dpg.set_item_label('menu_settings', self.get_text('menu_settings'))
         if dpg.does_item_exist("translate_button"): dpg.set_item_label('translate_button', self.get_text('menu_toggle_language'))
         if dpg.does_item_exist("menu_theme"): dpg.set_item_label('menu_theme', self.get_text('menu_theme'))
+        if dpg.does_item_exist("restore_backups_button"): dpg.set_item_label('restore_backups_button', self.get_text('menu_restore_backups'))
         if dpg.does_item_exist("menu_help"): dpg.set_item_label('menu_help', self.get_text('menu_help'))
         if dpg.does_item_exist("verify_version"): dpg.set_item_label('verify_version', self.get_text('menu_check_updates'))
         if dpg.does_item_exist("theme_purple_item"): dpg.set_item_label('theme_purple_item', self.get_text('theme_purple'))
