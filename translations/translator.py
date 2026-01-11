@@ -30,7 +30,6 @@ class Translator:
     def update_texts(self):
         dpg.set_item_label('select_folder_button', self.get_text('select_folder_button'))
         dpg.set_item_label('select_ow_button', self.get_text('select_ow_button'))
-        dpg.set_value('sprite_txt_preview', self.get_text('sprite_txt_preview'))
         dpg.set_value('overworld_txt_name', self.get_text('overworld_txt_name'))
         dpg.set_value('width_txt', self.get_text('width_txt'))
         dpg.set_value('height_txt', self.get_text('height_txt'))
@@ -40,13 +39,16 @@ class Translator:
         dpg.set_value('palette_slot_txt', self.get_text('palette_slot_txt'))
         dpg.set_value('anim_table_txt', self.get_text('anim_table_txt'))
         dpg.set_value('shadow_size_txt', self.get_text('shadow_size_txt'))
-        dpg.set_value('inanimate_txt', self.get_text('inanimate_txt'))
-        dpg.set_value('tracks_txt', self.get_text('tracks_txt'))
+        if dpg.does_item_exist("chk_inanimate"):
+            dpg.set_item_label('chk_inanimate', self.get_text('inanimate_txt'))
+        if dpg.does_item_exist("chk_tracks"):
+            dpg.set_item_label('chk_tracks', self.get_text('tracks_txt'))
         dpg.set_item_label('insert_button', self.get_text('insert_button'))
         dpg.set_value('expansion_ver_txt', self.get_text('expansion_ver_txt'))
-        dpg.set_item_label('pokeemerald_options', self.get_text('pokeemerald_options'))
+        dpg.set_value('pokeemerald_options', self.get_text('pokeemerald_options'))
         dpg.set_value('pal_tag_txt', self.get_text('pal_tag_txt'))
-        dpg.set_value('disableReflection_txt', self.get_text('disableReflection_txt'))
+        if dpg.does_item_exist("chk_disableReflection"):
+            dpg.set_item_label('chk_disableReflection', self.get_text('disableReflection_txt'))
         dpg.set_value('translate_tooltip_text', self.get_text('translate_tooltip'))
         dpg.set_item_label('translate_button', self.get_text('translate_button'))
         if dpg.does_item_exist("theme_label"):

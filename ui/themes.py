@@ -60,50 +60,57 @@ def setup_themes():
 
     with dpg.theme(tag=THEME_TAGS["light"]):
         with dpg.theme_component(dpg.mvAll):
-            dpg.add_theme_color(dpg.mvThemeCol_Text, (25, 25, 25))
-            dpg.add_theme_color(dpg.mvThemeCol_Border, (170, 170, 170))
-            dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (240, 240, 240))
+            dpg.add_theme_color(dpg.mvThemeCol_WindowBg, (245, 252, 255))
+            dpg.add_theme_color(dpg.mvThemeCol_ChildBg, (245, 252, 255))
+            dpg.add_theme_color(dpg.mvThemeCol_Text, (20, 35, 40)) # Darker text for better contrast
+            dpg.add_theme_color(dpg.mvThemeCol_Border, (180, 210, 220))
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (255, 255, 255)) # Pure white inputs
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (225, 245, 255))
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, (200, 235, 250))
+            dpg.add_theme_style(dpg.mvStyleVar_WindowRounding, 8)
+            dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 6)
+            dpg.add_theme_style(dpg.mvStyleVar_PopupRounding, 6)
 
+        # --- Interactive Elements (Buttons) ---
         with dpg.theme_component(dpg.mvButton):
-            dpg.add_theme_color(dpg.mvThemeCol_Button, (220, 220, 220))
-            dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (200, 200, 200))
-            dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (180, 180, 180))
-            dpg.add_theme_color(dpg.mvThemeCol_Text, (20, 20, 20))
-            dpg.add_theme_color(dpg.mvThemeCol_Border, (150, 150, 150))
-            dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 5)
-            dpg.add_theme_style(dpg.mvStyleVar_FramePadding, 10, 5)
+            dpg.add_theme_color(dpg.mvThemeCol_Button, (0, 160, 190))
+            dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (0, 190, 220))
+            dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (0, 140, 170))
+            dpg.add_theme_color(dpg.mvThemeCol_Text, (255, 255, 255))
+            dpg.add_theme_style(dpg.mvStyleVar_FramePadding, 12, 6)
 
+        # --- Inputs & Others ---
         with dpg.theme_component(dpg.mvInputText):
-            dpg.add_theme_color(dpg.mvThemeCol_Border, (150, 150, 150))
-            dpg.add_theme_color(dpg.mvThemeCol_Text, (25, 25, 25))
-            dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 5)
+            dpg.add_theme_color(dpg.mvThemeCol_Border, (0, 160, 190))
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (255, 255, 255))
 
         with dpg.theme_component(dpg.mvInputInt):
-            dpg.add_theme_color(dpg.mvThemeCol_Border, (150, 150, 150))
-            dpg.add_theme_color(dpg.mvThemeCol_BorderShadow, (0, 0, 0))
-            dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (230, 230, 230))
-            dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, (210, 210, 210))
-            dpg.add_theme_color(dpg.mvThemeCol_Text, (25, 25, 25))
-            dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 5)
-            dpg.add_theme_style(dpg.mvStyleVar_FramePadding, 10, 5)
-            dpg.add_theme_style(dpg.mvStyleVar_ItemSpacing, 10, 5)
+            dpg.add_theme_color(dpg.mvThemeCol_Button, (0, 160, 190))
+            dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (0, 190, 220))
+            dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (0, 140, 170))
 
         with dpg.theme_component(dpg.mvCombo):
-            dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (230, 230, 230))
-            dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, (210, 210, 210))
-            dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 5)
+            dpg.add_theme_color(dpg.mvThemeCol_Button, (0, 160, 190))
+            dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (0, 190, 220))
+            dpg.add_theme_color(dpg.mvThemeCol_HeaderHovered, (200, 240, 255))
 
         with dpg.theme_component(dpg.mvSliderInt):
-            dpg.add_theme_color(dpg.mvThemeCol_SliderGrab, (150, 150, 150))
-            dpg.add_theme_color(dpg.mvThemeCol_SliderGrabActive, (120, 120, 120))
+            dpg.add_theme_color(dpg.mvThemeCol_SliderGrab, (0, 160, 190))
+            dpg.add_theme_color(dpg.mvThemeCol_SliderGrabActive, (0, 130, 160))
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (200, 220, 230))
+            dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (180, 210, 225))
 
         with dpg.theme_component(dpg.mvCollapsingHeader):
-            dpg.add_theme_color(dpg.mvThemeCol_Header, (220, 220, 220))
-            dpg.add_theme_color(dpg.mvThemeCol_HeaderHovered, (200, 200, 200))
-            dpg.add_theme_color(dpg.mvThemeCol_HeaderActive, (180, 180, 180))
-            dpg.add_theme_color(dpg.mvThemeCol_Border, (170, 170, 170))
-            dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 5)
-            dpg.add_theme_style(dpg.mvStyleVar_FramePadding, 10, 5)
+            dpg.add_theme_color(dpg.mvThemeCol_Header, (0, 160, 190))
+            dpg.add_theme_color(dpg.mvThemeCol_HeaderHovered, (0, 190, 220))
+            dpg.add_theme_color(dpg.mvThemeCol_HeaderActive, (0, 130, 160))
+            dpg.add_theme_color(dpg.mvThemeCol_Text, (255, 255, 255))
+            dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 6)
+            dpg.add_theme_style(dpg.mvStyleVar_FramePadding, 10, 8)
+
+        with dpg.theme_component(dpg.mvSeparator):
+            dpg.add_theme_color(dpg.mvThemeCol_Separator, (0, 160, 190, 100))
+
 
 def apply_theme(theme_key):
     theme_tag = THEME_TAGS.get(theme_key, THEME_TAGS[DEFAULT_THEME_KEY])

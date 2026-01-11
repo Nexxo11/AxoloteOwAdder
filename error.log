@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "e:\Programacion\Decomp\Recursos\AxoloteOwAdder\main.py", line 10, in <module>
+    main_window = MainWindow(translator)
+  File "e:\Programacion\Decomp\Recursos\AxoloteOwAdder\ui\main_window.py", line 23, in __init__
+    setup_themes()
+  File "e:\Programacion\Decomp\Recursos\AxoloteOwAdder\ui\themes.py", line 91, in setup_themes
+    dpg.add_theme_color(dpg.mvThemeCol_TextSelected, (255, 255, 255)) # White text when selected
+AttributeError: module 'dearpygui.dearpygui' has no attribute 'mvThemeCol_TextSelected'

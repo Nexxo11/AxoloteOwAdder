@@ -9,8 +9,6 @@ def setup_tooltips():
         dpg.add_text("Click to select the project folder")
     with dpg.tooltip("select_ow_button"):
         dpg.add_text("Click to select the new overworld to add to your project")
-    with dpg.tooltip("sprite_preview"):
-        dpg.add_text("Sprite preview of new overworld")
     with dpg.tooltip("overworld_name"):
         dpg.add_text("Enter the name of the overworld character.\nExample: GARY.")
     with dpg.tooltip("width"):
