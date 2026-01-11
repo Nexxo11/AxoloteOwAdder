@@ -79,7 +79,7 @@ def setup_themes():
             dpg.add_theme_style(dpg.mvStyleVar_GrabRounding, 8)
 
             dpg.add_theme_style(dpg.mvStyleVar_FramePadding, 12, 8)
-            dpg.add_theme_style(dpg.mvStyleVar_ItemSpacing, 10, 8)
+            dpg.add_theme_style(dpg.mvStyleVar_ItemSpacing, 8, 4)
             dpg.add_theme_style(dpg.mvStyleVar_WindowPadding, 14, 12)
 
         # Buttons (default: neutral)
@@ -201,7 +201,7 @@ def setup_themes():
             dpg.add_theme_style(dpg.mvStyleVar_GrabRounding, 8)
 
             dpg.add_theme_style(dpg.mvStyleVar_FramePadding, 12, 8)
-            dpg.add_theme_style(dpg.mvStyleVar_ItemSpacing, 10, 8)
+            dpg.add_theme_style(dpg.mvStyleVar_ItemSpacing, 8, 4)
             dpg.add_theme_style(dpg.mvStyleVar_WindowPadding, 14, 12)
 
         # Buttons (default neutral)

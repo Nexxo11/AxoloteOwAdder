@@ -8,8 +8,8 @@ if __name__ == "__main__":
         dpg.create_context()
         translator = Translator()
         main_window = MainWindow(translator)
-        dpg.create_viewport(title='AxoloteOwAdder',             width=600,
-            height=720, resizable=False, small_icon='icon.ico')
+        dpg.create_viewport(title='AxoloteOwAdder',             width=550,
+            height=865, resizable=True, small_icon='icon.ico', min_width=400, min_height=500)
         
         dpg.setup_dearpygui()
         dpg.show_viewport()

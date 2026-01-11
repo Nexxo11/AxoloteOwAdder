@@ -56,8 +56,6 @@ class MainWindow:
             label="AxoloteOwAdder",
             width=560,
             height=720,
-            no_resize=True,
-            no_move=True,
         ):
             # --- Hidden Data Fields (required by core/adder.py) ---
             dpg.add_input_text(tag="inanimate", default_value="FALSE", show=False)
@@ -82,7 +80,7 @@ class MainWindow:
                 self._bind_action_button_themes()
 
             # Small spacing helpers (consistent + easy to tweak)
-            def vspace(px=6):
+            def vspace(px=4):
                 dpg.add_spacer(height=px)
 
             # =========================
@@ -124,7 +122,7 @@ class MainWindow:
             # =========================
             # Project Setup
             # =========================
-            vspace(6)
+            vspace(4)
             dpg.add_text(self.translator.get_text("header_project_setup"), tag="header_project_setup", color=(120, 130, 145))
             dpg.add_separator()
             # vspace(4)
@@ -134,7 +132,7 @@ class MainWindow:
                     label=self.translator.get_text("select_folder_button"),
                     callback=lambda: select_folder(self.translator),
                     tag="select_folder_button",
-                    width=190,
+                    width=-1,
                     height=32,
                 )
             # dpg.add_spacer(width=10)
@@ -149,7 +147,7 @@ class MainWindow:
             # vspace(8)
             dpg.add_text(self.translator.get_text("header_overworld"), tag="header_overworld", color=(120, 130, 145))
             dpg.add_separator()
-            vspace(4)
+            vspace(2)
 
             dpg.add_button(
                 label=self.translator.get_text("select_ow_button"),
@@ -159,155 +157,162 @@ class MainWindow:
                 height=34,
             )
 
-            vspace(6)
-            with dpg.group(horizontal=True):
-                with dpg.group():
-                    dpg.add_text(self.translator.get_text("overworld_txt_name"), tag="overworld_txt_name", color=(140, 150, 165))
-                    dpg.add_input_text(tag="overworld_name", width=260)
+            vspace(4)
+            
+            with dpg.group():
+                dpg.add_text(self.translator.get_text("overworld_txt_name"), tag="overworld_txt_name", color=(140, 150, 165))
+                dpg.add_input_text(tag="overworld_name", width=-1)
 
-                # dpg.add_spacer(width=5)
+            vspace(2)
 
-                with dpg.group():
-                    dpg.add_text(self.translator.get_text("text_installed"), tag="text_installed", color=(140, 150, 165))
-                    with dpg.group(horizontal=True):
-                                                dpg.add_combo(
-                                                    items=[],
-                                                    tag="installed_overworlds_combo",
-                                                    width=220,
-                                                    callback=_update_name_from_combo,
-                                                    default_value="Select...",
-                                                )
-                                                # dpg.add_spacer(width=4)
-                                                if self.has_refresh_icon:
-                                                    dpg.add_image_button(
-                                                        texture_tag=self.refresh_icon_tag,
-                                                        width=16,
-                                                        height=16,
-                                                        callback=_refresh_overworld_list,
-                                                        tag="refresh_list_btn",
-                                                    )
-                                                else:
-                                                    dpg.add_button(
-                                                        label="↻",
-                                                        width=16,
-                                                        height=16,
-                                                        callback=_refresh_overworld_list,
-                                                        tag="refresh_list_btn",
-                                                    )
+            with dpg.group():
+                dpg.add_text(self.translator.get_text("text_installed"), tag="text_installed", color=(140, 150, 165))
+                with dpg.group(horizontal=True):
+                    dpg.add_combo(
+                        items=[],
+                        tag="installed_overworlds_combo",
+                        width=-50,
+                        callback=_update_name_from_combo,
+                        default_value="Select...",
+                    )
+                    # dpg.add_spacer(width=4)
+                    if self.has_refresh_icon:
+                        dpg.add_image_button(
+                            texture_tag=self.refresh_icon_tag,
+                            width=22,
+                            height=22,
+                            callback=_refresh_overworld_list,
+                            tag="refresh_list_btn",
+                        )
+                    else:
+                        dpg.add_button(
+                            label="↻",
+                            width=36,
+                            height=30,
+                            callback=_refresh_overworld_list,
+                            tag="refresh_list_btn",
+                        )
             # =========================
             # Sprite Settings
             # =========================
-            vspace(8)
+            vspace(6)
             dpg.add_text(self.translator.get_text("header_sprite_settings"), tag="header_sprite_settings", color=(120, 130, 145))
             dpg.add_separator()
-            vspace(4)
+            vspace(2)
 
-            with dpg.group(horizontal=True):
-                with dpg.group():
-                    dpg.add_text(self.translator.get_text("width_txt"), tag="width_txt", color=(140, 150, 165))
-                    dpg.add_combo(items=["16", "32", "64"], tag="width", default_value="32", width=120)
+            with dpg.table(header_row=False):
+                dpg.add_table_column()
+                dpg.add_table_column()
+                dpg.add_table_column()
 
-                dpg.add_spacer(width=10)
+                with dpg.table_row():
+                    with dpg.group():
+                        dpg.add_text(self.translator.get_text("width_txt"), tag="width_txt", color=(140, 150, 165))
+                        dpg.add_combo(items=["16", "32", "64"], tag="width", default_value="32", width=-1)
 
-                with dpg.group():
-                    dpg.add_text(self.translator.get_text("height_txt"), tag="height_txt", color=(140, 150, 165))
-                    dpg.add_combo(items=["16", "32", "64"], tag="height", default_value="32", width=120)
+                    with dpg.group():
+                        dpg.add_text(self.translator.get_text("height_txt"), tag="height_txt", color=(140, 150, 165))
+                        dpg.add_combo(items=["16", "32", "64"], tag="height", default_value="32", width=-1)
 
-                dpg.add_spacer(width=10)
-
-                with dpg.group():
-                    dpg.add_text(self.translator.get_text("framenum_txt"), tag="framenum_txt", color=(140, 150, 165))
-                    dpg.add_input_int(tag="frame_num", default_value=9, width=120)
+                    with dpg.group():
+                        dpg.add_text(self.translator.get_text("framenum_txt"), tag="framenum_txt", color=(140, 150, 165))
+                        dpg.add_input_int(tag="frame_num", default_value=9, width=-1)
 
             # =========================
             # Advanced Options
             # =========================
-            vspace(8)
+            vspace(6)
             with dpg.collapsing_header(label=self.translator.get_text("extra_options"), tag="extra_options", default_open=False):
                 dpg.add_text(self.translator.get_text("header_palette_anim"), tag="header_palette_anim", color=(120, 130, 145))
                 dpg.add_separator()
+                vspace(2)
+
+                with dpg.table(header_row=False):
+                    dpg.add_table_column()
+                    dpg.add_table_column()
+                    with dpg.table_row():
+                        with dpg.group():
+                            dpg.add_text(self.translator.get_text("palette_slot_txt"), tag="palette_slot_txt", color=(140, 150, 165))
+                            dpg.add_combo(
+                                items=[
+                                    "PALSLOT_PLAYER", "PALSLOT_NPC_1", "PALSLOT_NPC_2",
+                                    "PALSLOT_NPC_3", "PALSLOT_NPC_4", "PALSLOT_NPC_5",
+                                    "PALSLOT_NPC_6", "PALSLOT_NPC_7",
+                                ],
+                                tag="palette_slot",
+                                default_value="PALSLOT_NPC_1",
+                                width=-1,
+                            )
+                        with dpg.group():
+                            dpg.add_text(self.translator.get_text("anim_table_txt"), tag="anim_table_txt", color=(140, 150, 165))
+                            dpg.add_combo(
+                                items=[
+                                    "QuintyPlump", "Standard", "Following", "Following_Asym",
+                                    "HoOh", "GroudonSide", "Rayquaza", "BrendanMayNormal",
+                                    "AcroBike", "Surfing", "Nurse", "FieldMove", "BerryTree",
+                                    "BreakableRock", "CuttableTree", "Fishing",
+                                ],
+                                tag="anim_table",
+                                default_value="Standard",
+                                width=-1,
+                            )
+
                 vspace(4)
-
-                with dpg.group(horizontal=True):
-                    with dpg.group():
-                        dpg.add_text(self.translator.get_text("palette_slot_txt"), tag="palette_slot_txt", color=(140, 150, 165))
-                        dpg.add_combo(
-                            items=[
-                                "PALSLOT_PLAYER", "PALSLOT_NPC_1", "PALSLOT_NPC_2",
-                                "PALSLOT_NPC_3", "PALSLOT_NPC_4", "PALSLOT_NPC_5",
-                                "PALSLOT_NPC_6", "PALSLOT_NPC_7",
-                            ],
-                            tag="palette_slot",
-                            default_value="PALSLOT_NPC_1",
-                            width=220,
-                        )
-
-                    dpg.add_spacer(width=10)
-
-                    with dpg.group():
-                        dpg.add_text(self.translator.get_text("anim_table_txt"), tag="anim_table_txt", color=(140, 150, 165))
-                        dpg.add_combo(
-                            items=[
-                                "QuintyPlump", "Standard", "Following", "Following_Asym",
-                                "HoOh", "GroudonSide", "Rayquaza", "BrendanMayNormal",
-                                "AcroBike", "Surfing", "Nurse", "FieldMove", "BerryTree",
-                                "BreakableRock", "CuttableTree", "Fishing",
-                            ],
-                            tag="anim_table",
-                            default_value="Standard",
-                            width=220,
-                        )
-
-                vspace(6)
                 dpg.add_text(self.translator.get_text("reflection_palette_txt"), tag="reflection_palette_txt", color=(140, 150, 165))
                 dpg.add_input_text(
                     tag="reflection_palette_tag",
                     default_value="OBJ_EVENT_PAL_TAG_NONE",
-                    width=260,
+                    width=-1,
                 )
 
-                vspace(8)
+                vspace(6)
                 dpg.add_text(self.translator.get_text("header_properties"), tag="header_properties", color=(120, 130, 145))
                 dpg.add_separator()
-                vspace(4)
+                vspace(2)
 
-                with dpg.group(horizontal=True):
-                    with dpg.group():
-                        dpg.add_text(self.translator.get_text("shadow_size_txt"), tag="shadow_size_txt", color=(140, 150, 165))
-                        dpg.add_combo(
-                            items=["SHADOW_SIZE_S", "SHADOW_SIZE_M", "SHADOW_SIZE_L", "SHADOW_SIZE_XL"],
-                            tag="shadow_size",
-                            default_value="SHADOW_SIZE_M",
-                            width=200,
-                        )
+                with dpg.table(header_row=False):
+                    dpg.add_table_column()
+                    dpg.add_table_column()
+                    with dpg.table_row():
+                        with dpg.group():
+                            dpg.add_text(self.translator.get_text("shadow_size_txt"), tag="shadow_size_txt", color=(140, 150, 165))
+                            dpg.add_combo(
+                                items=["SHADOW_SIZE_S", "SHADOW_SIZE_M", "SHADOW_SIZE_L", "SHADOW_SIZE_XL"],
+                                tag="shadow_size",
+                                default_value="SHADOW_SIZE_M",
+                                width=-1,
+                            )
+                        with dpg.group(horizontal=True):
+                            # dpg.add_spacer(width=10)
+                            dpg.add_checkbox(label=self.translator.get_text("inanimate_txt"), callback=_sync_bool, user_data="inanimate", tag="chk_inanimate")
+                            dpg.add_spacer(width=6)
+                            dpg.add_checkbox(label=self.translator.get_text("tracks_txt"), callback=_sync_bool, user_data="tracks", tag="chk_tracks")
 
-                    dpg.add_spacer(width=10)
-                    dpg.add_checkbox(label=self.translator.get_text("inanimate_txt"), callback=_sync_bool, user_data="inanimate", tag="chk_inanimate")
-                    dpg.add_spacer(width=6)
-                    dpg.add_checkbox(label=self.translator.get_text("tracks_txt"), callback=_sync_bool, user_data="tracks", tag="chk_tracks")
-
-                vspace(8)
+                vspace(6)
                 dpg.add_text(self.translator.get_text("pokeemerald_options"), tag="pokeemerald_options", color=(120, 130, 145))
                 dpg.add_separator()
-                vspace(4)
+                vspace(2)
 
-                with dpg.group(horizontal=True):
-                    with dpg.group():
-                        dpg.add_text(self.translator.get_text("pal_tag_txt"), tag="pal_tag_txt", color=(140, 150, 165))
-                        dpg.add_combo(
-                            items=self.pal_tag_items,
-                            tag="pal_tag",
-                            default_value="NPC_1",
-                            width=240,
-                        )
-
-                    dpg.add_spacer(width=10)
-                    dpg.add_checkbox(
-                        label=self.translator.get_text("disableReflection_txt"),
-                        callback=_sync_bool,
-                        user_data="disableReflection",
-                        tag="chk_disableReflection",
-                    )
+                with dpg.table(header_row=False):
+                    dpg.add_table_column()
+                    dpg.add_table_column()
+                    with dpg.table_row():
+                        with dpg.group():
+                            dpg.add_text(self.translator.get_text("pal_tag_txt"), tag="pal_tag_txt", color=(140, 150, 165))
+                            dpg.add_combo(
+                                items=self.pal_tag_items,
+                                tag="pal_tag",
+                                default_value="NPC_1",
+                                width=-1,
+                            )
+                        with dpg.group():
+                            # dpg.add_spacer(width=10)
+                            dpg.add_checkbox(
+                                label=self.translator.get_text("disableReflection_txt"),
+                                callback=_sync_bool,
+                                user_data="disableReflection",
+                                tag="chk_disableReflection",
+                            )
 
             def _on_insert():
                 insert_overworld_gui(self.translator)
@@ -316,9 +321,9 @@ class MainWindow:
             # =========================
             # Actions
             # =========================
-            vspace(10)
+            vspace(8)
             dpg.add_separator()
-            vspace(6)
+            vspace(4)
 
             dpg.add_button(
                 label=self.translator.get_text("insert_button"),
@@ -328,7 +333,7 @@ class MainWindow:
                 tag="insert_button",
             )
 
-            vspace(5)
+            vspace(4)
             dpg.add_button(
                 label=self.translator.get_text("delete_button"),
                 callback=lambda: show_delete_confirmation(self.translator, callback=_refresh_overworld_list),
@@ -337,20 +342,22 @@ class MainWindow:
                 tag="delete_button",
             )
 
-            vspace(4)
+            vspace(2)
             dpg.add_text("", tag="status_text", wrap=540)
 
             # =========================
             # Footer
             # =========================
-            vspace(8)
+            vspace(6)
             dpg.add_separator()
             vspace(4)
 
-            with dpg.group(horizontal=True):
-                dpg.add_text(self.translator.get_text("expansion_ver_txt"), tag="expansion_ver_txt", color=(120, 130, 145))
-                dpg.add_spacer(width=170)
-                dpg.add_text(self.translator.get_text("text_credits"), tag="text_credits", color=(120, 130, 145))
+            with dpg.table(header_row=False):
+                dpg.add_table_column()
+                dpg.add_table_column()
+                with dpg.table_row():
+                    dpg.add_text(self.translator.get_text("expansion_ver_txt"), tag="expansion_ver_txt", color=(120, 130, 145))
+                    dpg.add_text(self.translator.get_text("text_credits"), tag="text_credits", color=(120, 130, 145), indent=100)
 
             # Initial load
             try:
