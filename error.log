@@ -1,9 +1,33 @@
+Exception: 
+Error:     [1011]
+Command:   add_*
+Item:      302 
+Label:     
+Item Type: mvAppItemType::mvTooltip
+Message:   Parent could not be deduced.
+
+The above exception was the direct cause of the following exception:
+
 Traceback (most recent call last):
-  File "e:\Programacion\Decomp\Recursos\AxoloteOwAdder\ui\main_window.py", line 312, in <lambda>
-    callback=lambda: insert_overworld_gui(self.translator),
-  File "e:\Programacion\Decomp\Recursos\AxoloteOwAdder\core\adder.py", line 232, in insert_overworld_gui
-    dpg.set_value("status_text", f"{translator.get_text('error_inserting_overworld')}{e}")
-  File "C:\Users\Usuario\AppData\Local\Programs\Python\Python310\lib\site-packages\dearpygui\dearpygui.py", line 9548, in set_value
-    return internal_dpg.set_value(item, value, **kwargs)
-SystemError: <built-in function set_value> returned a result with an exception set
-PS E:\Programacion\Decomp\Recursos\AxoloteOwAdder> 
+  File "C:\Users\Usuario\AppData\Local\Programs\Python\Python310\lib\site-packages\dearpygui\dearpygui.py", line 2793, in tooltip
+    widget = internal_dpg.add_tooltip(parent, label=label, user_data=user_data, use_internal_label=use_internal_label, tag=tag, show=show, delay=delay, hide_on_activity=hide_on_activity, **kwargs)
+SystemError: <built-in function add_tooltip> returned a result with an exception set
+
+During handling of the above exception, another exception occurred:
+
+Exception: Error: [1009] Message: 	No container to pop.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "e:\Programacion\Decomp\Recursos\AxoloteOwAdder\main.py", line 10, in <module>
+    main_window = MainWindow(translator)
+  File "e:\Programacion\Decomp\Recursos\AxoloteOwAdder\ui\main_window.py", line 46, in __init__
+    setup_tooltips()
+  File "e:\Programacion\Decomp\Recursos\AxoloteOwAdder\ui\tooltips.py", line 4, in setup_tooltips
+    with dpg.tooltip("translate_button"):
+  File "C:\Users\Usuario\AppData\Local\Programs\Python\Python310\lib\contextlib.py", line 135, in __enter__
+    return next(self.gen)
+  File "C:\Users\Usuario\AppData\Local\Programs\Python\Python310\lib\site-packages\dearpygui\dearpygui.py", line 2797, in tooltip
+    internal_dpg.pop_container_stack()
+SystemError: <built-in function pop_container_stack> returned a result with an exception set

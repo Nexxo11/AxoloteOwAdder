@@ -1,8 +1,8 @@
 import dearpygui.dearpygui as dpg
 
 def setup_tooltips():
-    with dpg.tooltip("translate_button"):
-        dpg.add_text("Click to translate the UI to Spanish or English.", tag="translate_tooltip_text")
+    with dpg.tooltip("menu_language"):
+        dpg.add_text("Click to change the UI language.", tag="translate_tooltip_text")
     with dpg.tooltip("verify_version"):
         dpg.add_text("Click to check for the latest version.")
     with dpg.tooltip("select_folder_button"):

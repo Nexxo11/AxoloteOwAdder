@@ -90,11 +90,10 @@ class MainWindow:
             # =========================
             with dpg.menu_bar():
                 with dpg.menu(label=self.translator.get_text("menu_settings"), tag="menu_settings"):
-                    dpg.add_menu_item(
-                        label=self.translator.get_text("menu_toggle_language"),
-                        callback=self.translator.toggle_language,
-                        tag="translate_button",
-                    )
+                    with dpg.menu(label=self.translator.get_text("menu_language"), tag="menu_language"):
+                        dpg.add_menu_item(label=self.translator.get_text("lang_en"), callback=lambda: self.translator.set_language("en"), tag="lang_en")
+                        dpg.add_menu_item(label=self.translator.get_text("lang_es"), callback=lambda: self.translator.set_language("es"), tag="lang_es")
+                        dpg.add_menu_item(label=self.translator.get_text("lang_pt"), callback=lambda: self.translator.set_language("pt"), tag="lang_pt")
                     with dpg.menu(label=self.translator.get_text("menu_theme"), tag="menu_theme"):
                         dpg.add_menu_item(
                             label=self.translator.get_text("theme_purple"),

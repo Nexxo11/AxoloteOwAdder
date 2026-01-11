@@ -19,18 +19,18 @@ class Translator:
     def get_text(self, key):
         return self.translations.get(key, f"[Missing translation for {key}]")
 
-    def toggle_language(self):
-        if self.current_language == "en":
-            self.current_language = "es"
-        else:
-            self.current_language = "en"
+    def set_language(self, language_code):
+        self.current_language = language_code
         self.translations = self.load_translations(self.current_language)
         self.update_texts()
 
     def update_texts(self):
         # Menu
         if dpg.does_item_exist("menu_settings"): dpg.set_item_label('menu_settings', self.get_text('menu_settings'))
-        if dpg.does_item_exist("translate_button"): dpg.set_item_label('translate_button', self.get_text('menu_toggle_language'))
+        if dpg.does_item_exist("menu_language"): dpg.set_item_label('menu_language', self.get_text('menu_language'))
+        if dpg.does_item_exist("lang_en"): dpg.set_item_label('lang_en', self.get_text('lang_en'))
+        if dpg.does_item_exist("lang_es"): dpg.set_item_label('lang_es', self.get_text('lang_es'))
+        if dpg.does_item_exist("lang_pt"): dpg.set_item_label('lang_pt', self.get_text('lang_pt'))
         if dpg.does_item_exist("menu_theme"): dpg.set_item_label('menu_theme', self.get_text('menu_theme'))
         if dpg.does_item_exist("restore_backups_button"): dpg.set_item_label('restore_backups_button', self.get_text('menu_restore_backups'))
         if dpg.does_item_exist("menu_help"): dpg.set_item_label('menu_help', self.get_text('menu_help'))

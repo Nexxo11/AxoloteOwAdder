@@ -61,5 +61,9 @@
     "header_sprite_settings": "Configuración del Sprite",
     "header_palette_anim": "Paleta y Animaciones",
     "header_properties": "Propiedades",
-    "text_credits": "0.4.2 Por Nexxo"
+    "text_credits": "0.4.2 Por Nexxo",
+    "menu_language": "Idioma",
+    "lang_en": "Inglés",
+    "lang_es": "Español",
+    "lang_pt": "Portugués"
 }
