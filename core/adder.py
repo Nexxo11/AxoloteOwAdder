@@ -1,6 +1,7 @@
 import configparser
 import shutil
 import os
+import threading
 import dearpygui.dearpygui as dpg
 from core import defines
 from utils.file_system import insert_after_line_number, insert_line_in_structure
@@ -9,7 +10,6 @@ config = configparser.ConfigParser()
 config.read('path.ini')
 
 def create_backups(file_paths):
-    """Creates a backup (.bak) of the specified files."""
     for file_path in file_paths:
         try:
             if os.path.exists(file_path):
@@ -18,7 +18,6 @@ def create_backups(file_paths):
             print(f"Warning: Could not create backup for {file_path}: {e}")
 
 def restore_backups(translator):
-    """Restores files from their .bak backups if they exist."""
     config.read('path.ini')
     if not config.has_section('pkmn_path') or 'path' not in config['pkmn_path']:
         dpg.set_value("status_text", translator.get_text('destination_folder_not_set'))
@@ -192,12 +191,21 @@ def overworld_exists(overworld_name):
     config.read('path.ini')
     base_path = config['pkmn_path']['path']
     defines_file = f"{base_path}/include/constants/event_objects.h"
-    search_string = f"#define OBJ_EVENT_GFX_{overworld_name.upper()}"
+    
+    # Normalize input for agnostic comparison
+    norm_input = overworld_name.lower().replace("_", "")
+    
     try:
         with open(defines_file, 'r', encoding='utf-8') as f:
-            if search_string in f.read():
+            content = f.read()
+            
+        # Find all OBJ_EVENT_GFX_ defines and compare normalized
+        matches = re.findall(r'#define\s+(OBJ_EVENT_GFX_\w+)', content)
+        for m in matches:
+            norm_m = m.replace("OBJ_EVENT_GFX_", "").lower().replace("_", "")
+            if norm_m == norm_input:
                 return True
-    except FileNotFoundError:
+    except Exception:
         return False
     return False
 
@@ -372,40 +380,121 @@ def find_default_overworld(base_path, exclude_name):
     
     return "OBJ_EVENT_GFX_VAR_0" # Ultimate fallback
 
-def replace_map_references(base_path, deleted_name, replacement_define):
+def replace_in_file(file_path, target_string, replacement_string):
     """
-    Scans data/maps for map.json and events.inc and replaces the deleted overworld define.
+    Replaces a specific string with a replacement string in a given file.
+    Uses regex for word boundary safety.
+    Returns True if a replacement was made.
+    """
+    if not os.path.exists(file_path):
+        return False
+    
+    try:
+        with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+            content = f.read()
+        
+        # Use regex for safety with word boundaries
+        pattern = r'\b' + re.escape(target_string) + r'\b'
+        if re.search(pattern, content):
+            new_content = re.sub(pattern, replacement_string, content)
+            with open(file_path, 'w', encoding='utf-8', errors='ignore') as f:
+                f.write(new_content)
+            return True
+    except Exception as e:
+        print(f"Error processing {file_path}: {e}")
+    return False
+
+def scan_and_replace_references(root_dir, target_define, replacement_define, extensions=None, progress_tag=None, text_tag=None):
+    """
+    Recursively scans a directory for files with specific extensions and replaces a target define.
+    """
+    if extensions is None:
+        extensions = [".c", ".h", ".inc", ".s"]
+    
+    if not os.path.exists(root_dir):
+        return 0
+
+    if text_tag:
+        dpg.set_value(text_tag, f"Collecting files in {os.path.basename(root_dir)}...")
+
+    # Collect files first for progress bar
+    files_to_process = []
+    for root, dirs, files in os.walk(root_dir):
+        for file in files:
+            if any(file.endswith(ext) for ext in extensions):
+                file_path = os.path.join(root, file)
+                # Exclude the constant definition file
+                if "include/constants/event_objects.h" in file_path.replace("\\", "/"):
+                    continue
+                files_to_process.append(file_path)
+
+    total = len(files_to_process)
+    count = 0
+    for i, file_path in enumerate(files_to_process):
+        if progress_tag and total > 0:
+            dpg.set_value(progress_tag, (i / total))
+        
+        if text_tag and i % 5 == 0: # Update text occasionally to show life
+            percent = int((i / total) * 100) if total > 0 else 0
+            dpg.set_value(text_tag, f"Scanning {os.path.basename(root_dir)}... {percent}% ({i}/{total})")
+
+        if replace_in_file(file_path, target_define, replacement_define):
+            count += 1
+            
+    return count
+
+def replace_map_references(base_path, target_define, replacement_define, progress_tag=None, text_tag=None):
+    """
+    Scans data/maps for map.json and events.inc and replaces the target define.
+    Updates a DPG progress bar if progress_tag is provided.
     """
     maps_dir = os.path.join(base_path, "data", "maps")
-    target_define = f"OBJ_EVENT_GFX_{deleted_name.upper()}"
     
     if not os.path.exists(maps_dir):
         return 0
 
-    count = 0
-    # Walk through all map directories
+    if text_tag:
+        dpg.set_value(text_tag, "Collecting map files...")
+
+    # First, gather all files to process to calculate total for progress bar
+    files_to_process = []
     for root, dirs, files in os.walk(maps_dir):
         for file in files:
             if file in ["map.json", "events.inc"]:
-                file_path = os.path.join(root, file)
-                try:
-                    with open(file_path, 'r', encoding='utf-8') as f:
-                        content = f.read()
-                    
-                    if target_define in content:
-                        # Replace word boundary to ensure exact match
-                        # Using simple string replace might be safer if boundaries are known, 
-                        # but regex is better to avoid partial matches (e.g. OBJ_EVENT_GFX_NAME_TWO)
-                        # However, for map.json/inc, boundaries are usually quotes or commas.
-                        # Let's use regex for safety.
-                        pattern = r'\b' + re.escape(target_define) + r'\b'
-                        if re.search(pattern, content):
-                            new_content = re.sub(pattern, replacement_define, content)
-                            with open(file_path, 'w', encoding='utf-8') as f:
-                                f.write(new_content)
-                            count += 1
-                except Exception as e:
-                    print(f"Error processing {file_path}: {e}")
+                files_to_process.append(os.path.join(root, file))
+
+    total_files = len(files_to_process)
+    count = 0
+
+    # Walk through the collected files
+    for i, file_path in enumerate(files_to_process):
+        # Update progress
+        if progress_tag and total_files > 0:
+            dpg.set_value(progress_tag, (i / total_files))
+
+        if text_tag and i % 5 == 0:
+            percent = int((i / total_files) * 100) if total_files > 0 else 0
+            dpg.set_value(text_tag, f"Scanning maps... {percent}% ({i}/{total_files})")
+
+        try:
+            with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+            
+            if target_define in content:
+                # Replace word boundary to ensure exact match
+                pattern = r'\b' + re.escape(target_define) + r'\b'
+                if re.search(pattern, content):
+                    new_content = re.sub(pattern, replacement_define, content)
+                    with open(file_path, 'w', encoding='utf-8', errors='ignore') as f:
+                        f.write(new_content)
+                    count += 1
+        except Exception as e:
+            print(f"Error processing {file_path}: {e}")
+            
+    if progress_tag:
+        dpg.set_value(progress_tag, 1.0)
+
+        
     return count
 
 def _get_cased_overworld_name(base_path, overworld_name):
@@ -413,13 +502,15 @@ def _get_cased_overworld_name(base_path, overworld_name):
     Attempts to find the exact casing of the overworld name as used in
     object_event_graphics.h (e.g. gObjectEventPic_Name).
     Returns the found name (with case) or the original if not found.
+    Ignores underscores during comparison to handle 'Girl_2' vs 'Girl2' mismatches.
     """
     object_events_file = f"{base_path}/src/data/object_events/object_event_graphics.h"
     try:
         with open(object_events_file, 'r', encoding='utf-8') as f:
             lines = f.readlines()
         
-        lower_name = overworld_name.lower()
+        # Normalize input: remove underscores, lower case
+        normalized_input = overworld_name.lower().replace("_", "")
         search_prefix = "const u32 gObjectEventPic_"
         
         for line in lines:
@@ -432,105 +523,459 @@ def _get_cased_overworld_name(base_path, overworld_name):
                     rest = parts[1]
                     if "[]" in rest:
                         found_name = rest.split("[]")[0]
-                        if found_name.lower() == lower_name:
+                        # Normalize found name
+                        normalized_found = found_name.lower().replace("_", "")
+                        
+                        if normalized_found == normalized_input:
                             return found_name
     except FileNotFoundError:
         pass
     
     return overworld_name
 
-def delete_overworld(overworld_name, translator):
-    """Main function to delete an overworld and all its references."""
+def _remove_lines_with_regex(file_path, patterns_to_find):
+    """
+    Removes lines matching any of the given regex patterns (case-insensitive).
+    """
     try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+        
+        new_lines = []
+        # Compile patterns with IGNORECASE
+        compiled_patterns = [re.compile(p, re.IGNORECASE) for p in patterns_to_find]
+        
+        original_len = len(lines)
+        for line in lines:
+            if not any(cp.search(line) for cp in compiled_patterns):
+                new_lines.append(line)
+        
+        if len(new_lines) < original_len:
+            with open(file_path, 'w', encoding='utf-8') as f:
+                f.writelines(new_lines)
+    except FileNotFoundError:
+        pass
+
+def _remove_block_with_regex(file_path, start_pattern, end_str="}};"):
+    """
+    Removes a block of code starting with a line matching start_pattern (regex)
+    and ending with end_str. Handles single-line blocks correctly.
+    """
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+
+        new_lines = []
+        in_block = False
+        found = False
+        skip_next_empty = False
+        
+        start_re = re.compile(start_pattern, re.IGNORECASE)
+
+        for line in lines:
+            if skip_next_empty:
+                skip_next_empty = False
+                if line.strip() == "":
+                    continue
+
+            # Check if this line marks the start of the block
+            if not in_block and start_re.search(line):
+                found = True
+                
+                # Check if it is a single-line block (starts and ends on same line)
+                if end_str in line:
+                    # It's a one-liner. Just skip this line.
+                    # Remove preceding blank line if last added line was blank
+                    if new_lines and new_lines[-1].strip() == "":
+                        new_lines.pop()
+                    continue
+                else:
+                    # Multi-line block start
+                    in_block = True
+                    if new_lines and new_lines[-1].strip() == "":
+                        new_lines.pop()
+                    continue
+
+            if in_block and end_str in line:
+                in_block = False
+                skip_next_empty = True
+                continue
+
+            if not in_block:
+                new_lines.append(line)
+        
+        if found:
+            with open(file_path, 'w', encoding='utf-8') as f:
+                f.writelines(new_lines)
+    except FileNotFoundError:
+        pass
+
+def find_associated_define(base_path, overworld_name):
+    """
+    Scans object_event_graphics_info_pointers.h to find the define used for the given overworld.
+    Returns the define name (e.g. 'OBJ_EVENT_GFX_GIRL_3') or None.
+    """
+    pointers_file = os.path.join(base_path, "src", "data", "object_events", "object_event_graphics_info_pointers.h")
+    target_struct = f"gObjectEventGraphicsInfo_{overworld_name}"
+    
+    try:
+        with open(pointers_file, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        # Look for [DEFINE_NAME] = &gObjectEventGraphicsInfo_Name
+        # Use regex to capture the define
+        pattern = rf"\[\s*(OBJ_EVENT_GFX_\w+)\s*\]\s*=\s*&{re.escape(target_struct)}"
+        match = re.search(pattern, content, re.IGNORECASE)
+        if match:
+            return match.group(1)
+    except Exception:
+        pass
+    return None
+
+def _delete_overworld_task(overworld_name, translator):
+
+    """
+
+    Background task to perform the deletion logic.
+
+    """
+
+    try:
+
+        with open("delete_debug.log", "w") as log:
+
+            log.write(f"Starting deletion for: '{overworld_name}'\n")
+
+    except:
+
+        pass
+
+
+
+    def log_msg(msg):
+
+        try:
+
+            with open("delete_debug.log", "a") as log:
+
+                log.write(msg + "\n")
+
+        except:
+
+            pass
+
+
+
+    try:
+
         if not overworld_exists(overworld_name):
+
+            log_msg("Overworld does not exist according to overworld_exists")
+
             dpg.set_value("status_text", translator.get_text('delete_not_found').format(name=overworld_name))
+
             return
 
-        base_path = config['pkmn_path']['path']
-        
-        # Replace references in maps
-        default_ow = find_default_overworld(base_path, overworld_name)
-        replaced_count = replace_map_references(base_path, overworld_name, default_ow)
 
-        # Resolve the correct casing used in the C files
+
+        base_path = config['pkmn_path']['path']
+
+        log_msg(f"Base path: {base_path}")
+
+        
+
+        # Resolve casing (Agnostic to underscores)
+
         cased_overworld_name = _get_cased_overworld_name(base_path, overworld_name)
+
+        log_msg(f"Cased name: {cased_overworld_name}")
+
+
+
+        # Find the actual define used (Crucial for map replacement)
+
+        found_define = find_associated_define(base_path, cased_overworld_name)
+
+        log_msg(f"Found define in pointers: {found_define}")
+
         
-        # Use cased_overworld_name for code references, 
-        # but KEEP uppercase for defines (as they are always UPPER).
+
+        # Determine the define to use for deletion and replacement
+
+        define_name_to_use = found_define if found_define else f"OBJ_EVENT_GFX_{cased_overworld_name.upper()}"
+
+        log_msg(f"Define to use: {define_name_to_use}")
+
+
+
+        # Replace references in maps
+
+        dpg.set_value("loading_text", "Scanning maps for references...")
+
+        default_ow = find_default_overworld(base_path, cased_overworld_name)
+
+        log_msg(f"Default replacement: {default_ow}")
+
+        # Pass the EXACT define found (or constructed) to be replaced
+        replaced_count = replace_map_references(base_path, define_name_to_use, default_ow, progress_tag="progress_bar", text_tag="loading_text")
+        log_msg(f"Replaced maps: {replaced_count}")
+
+        # Scan src/ for lingering references (battle tower, pike, contest, etc.)
+        dpg.set_value("loading_text", "Scanning src/ for references...")
+        src_dir = os.path.join(base_path, "src")
+        replaced_src_count = scan_and_replace_references(src_dir, define_name_to_use, default_ow, progress_tag="progress_bar", text_tag="loading_text")
+        log_msg(f"Replaced references in src/: {replaced_src_count}")
+
+        # Scan include/ for lingering references
+        dpg.set_value("loading_text", "Scanning include/ for references...")
+        include_dir = os.path.join(base_path, "include")
+        replaced_inc_count = scan_and_replace_references(include_dir, define_name_to_use, default_ow, progress_tag="progress_bar", text_tag="loading_text")
+        log_msg(f"Replaced references in include/: {replaced_inc_count}")
+
+        # Scan data/ for lingering references (outside maps)
+        dpg.set_value("loading_text", "Scanning data/ for references...")
+        data_dir = os.path.join(base_path, "data")
+        replaced_data_count = scan_and_replace_references(data_dir, define_name_to_use, default_ow, progress_tag="progress_bar", text_tag="loading_text")
+        log_msg(f"Replaced references in data/: {replaced_data_count}")
+
+
+
+        # Update text for file deletion
+
+        dpg.set_value("loading_text", "Removing files and updating tables...")
+
+        dpg.set_value("progress_bar", 1.0) 
+
         
+
         project_version = config['pkmn_path'].get('project_version', 'Pokeemerald')
+
         dynamic_pal_system = config['pkmn_path'].get('dynamic_pal_system', 'False')
 
+
+
         defines_file = f"{base_path}/include/constants/event_objects.h"
+
         object_events_file = f"{base_path}/src/data/object_events/object_event_graphics.h"
+
         pic_tables_file = f"{base_path}/src/data/object_events/object_event_pic_tables.h"
+
         graphics_info_file = f"{base_path}/src/data/object_events/object_event_graphics_info.h"
+
         pointers_file = f"{base_path}/src/data/object_events/object_event_graphics_info_pointers.h"
+
         movement_file = f"{base_path}/src/event_object_movement.c"
+
         spritesheet_rules_file = f"{base_path}/spritesheet_rules.mk"
 
+
+
         # Image files to delete
+
         image_files = [
+
             f"{base_path}/graphics/object_events/pics/people/{cased_overworld_name}.png",
+
             f"{base_path}/graphics/object_events/pics/people/{cased_overworld_name}.4bpp",
+
             f"{base_path}/graphics/object_events/pics/people/{cased_overworld_name}.gbapal"
+
         ]
+
+
 
         # Create backups before modification
+
         create_backups([
+
             defines_file, object_events_file, pic_tables_file, 
+
             graphics_info_file, pointers_file, movement_file, spritesheet_rules_file
+
         ])
 
-        defines_to_remove = [
-            f"OBJ_EVENT_GFX_{overworld_name.upper()}",
-            f"OBJ_EVENT_PAL_TAG_{overworld_name.upper()}"
+
+
+        # Use regex for defines
+
+        defines_patterns = [
+
+            rf"#define\s+{re.escape(define_name_to_use)}\b",
+
+            rf"#define\s+{re.escape(define_name_to_use.replace('OBJ_EVENT_GFX', 'OBJ_EVENT_PAL_TAG'))}\b",
+
+            rf"#define\s+OBJ_EVENT_GFX_{re.escape(cased_overworld_name.upper())}\b",
+
+            rf"#define\s+OBJ_EVENT_PAL_TAG_{re.escape(cased_overworld_name.upper())}\b"
+
         ]
-        _remove_lines_from_file(defines_file, defines_to_remove)
 
-        incbins_to_remove = [f"gObjectEventPic_{cased_overworld_name}[]", f"gObjectEventPal_{cased_overworld_name}[]"]
-        _remove_lines_from_file(object_events_file, incbins_to_remove)
+        log_msg(f"Defining patterns: {defines_patterns}")
 
-        _remove_block_from_file(pic_tables_file, f"sPicTable_{cased_overworld_name}[]", end_str="};")
-        _remove_block_from_file(graphics_info_file, f"gObjectEventGraphicsInfo_{cased_overworld_name}", end_str="};")
+        _remove_lines_with_regex(defines_file, defines_patterns)
 
-        pointers_to_remove = [
-            f"gObjectEventGraphicsInfo_{cased_overworld_name}",
-            f"[OBJ_EVENT_GFX_{overworld_name.upper()}]"
+
+
+        # Remove INCBINs
+
+        incbins_patterns = [
+
+            rf"gObjectEventPic_{re.escape(cased_overworld_name)}\[\]", 
+
+            rf"gObjectEventPal_{re.escape(cased_overworld_name)}\[\]"
+
         ]
-        _remove_lines_from_file(pointers_file, pointers_to_remove)
 
-        _remove_lines_from_file(movement_file, [f"gObjectEventPal_{cased_overworld_name}"])
+        log_msg(f"Incbins patterns: {incbins_patterns}")
+
+        _remove_lines_with_regex(object_events_file, incbins_patterns)
+
+
+
+        # Remove blocks
+
+        log_msg("Removing blocks...")
+
+        _remove_block_with_regex(pic_tables_file, rf"sPicTable_{re.escape(cased_overworld_name)}\[\]", end_str="};")
+
+        _remove_block_with_regex(graphics_info_file, rf"gObjectEventGraphicsInfo_{re.escape(cased_overworld_name)}\b", end_str="};")
+
+
+
+        # Remove pointers
+
+        pointers_patterns = [
+
+            rf"gObjectEventGraphicsInfo_{re.escape(cased_overworld_name)}\b",
+
+            rf"\[{re.escape(define_name_to_use)}\]"
+
+        ]
+
+        log_msg(f"Pointers patterns: {pointers_patterns}")
+
+        _remove_lines_with_regex(pointers_file, pointers_patterns)
+
+
+
+        # Remove from movement file
+
+        movement_patterns = [rf"gObjectEventPal_{re.escape(cased_overworld_name)}\b"]
+
+        _remove_lines_with_regex(movement_file, movement_patterns)
+
+
+
+        # Remove rule
 
         with open(spritesheet_rules_file, 'r', encoding='utf-8') as f:
+
             lines = f.readlines()
+
         new_lines = []
+
         skip_next = False
-        target_rule = f"/{overworld_name}.4bpp:".lower()
+
+        target_rule = f"/{cased_overworld_name}.4bpp:".lower()
+
+        log_msg(f"Target rule: {target_rule}")
+
+        
+
         for line in lines:
+
             if skip_next:
+
                 skip_next = False
+
                 continue
+
             if target_rule in line.lower():
+
                 skip_next = True
+
                 if new_lines and new_lines[-1].strip() == "":
+
                     new_lines.pop()
+
                 continue
+
             new_lines.append(line)
+
         with open(spritesheet_rules_file, 'w', encoding='utf-8') as f:
+
             f.writelines(new_lines)
+
+
 
         defines.update_num_obj_event_gfx(increment=False)
 
+
+
         # Remove image files
+
         for img_file in image_files:
+
             if os.path.exists(img_file):
+
                 try:
+
                     os.remove(img_file)
+
+                    log_msg(f"Removed image: {img_file}")
+
                 except Exception as e:
+
                     print(f"Warning: Could not remove {img_file}: {e}")
 
-        dpg.set_value("status_text", translator.get_text('delete_success').format(name=cased_overworld_name) + (f"\nReplaced in {replaced_count} maps with {default_ow}." if replaced_count > 0 else ""))
+                    log_msg(f"Error removing image {img_file}: {e}")
+
+
+
+        success_msg = translator.get_text('delete_success').format(name=cased_overworld_name) + (f"\nReplaced in {replaced_count} maps with {default_ow}." if replaced_count > 0 else "")
+
+        dpg.set_value("status_text", success_msg)
+
+        log_msg("Success.")
+
+
 
     except Exception as e:
+
+        import traceback
+
+        error_msg = f"{e}\n{traceback.format_exc()}"
+
+        log_msg(f"EXCEPTION: {error_msg}")
+
         dpg.set_value("status_text", translator.get_text('delete_error').format(name=overworld_name, error=e))
+
+    finally:
+
+        if dpg.does_item_exist("loading_modal"):
+
+            dpg.delete_item("loading_modal")
+
+
+
+def delete_overworld(overworld_name, translator):
+
+    """Main function to delete an overworld and all its references."""
+
+    overworld_name = overworld_name.strip()
+
+    
+
+    # Create a modal for loading status
+
+    with dpg.window(label="Status", modal=True, show=True, tag="loading_modal", width=400, height=120, no_close=True):
+
+        dpg.add_text(translator.get_text('processing_maps') if hasattr(translator, 'get_text') else "Processing maps and references...", tag="loading_text")
+
+        dpg.add_progress_bar(tag="progress_bar", default_value=0.0, width=380)
+
+
+
+    # Start deletion in a separate thread to keep UI responsive
+
+    threading.Thread(target=_delete_overworld_task, args=(overworld_name, translator), daemon=True).start()
