@@ -69,7 +69,7 @@ class MainWindow:
             def _update_name_from_combo(sender, app_data):
                 dpg.set_value("overworld_name", app_data)
 
-            def _refresh_overworld_list():
+            def _refresh_overworld_list(sender=None, app_data=None, user_data=None):
                 ows = get_custom_overworlds()
                 if ows is not None:
                     dpg.configure_item("installed_overworlds_combo", items=ows)

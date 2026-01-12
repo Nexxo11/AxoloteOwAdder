@@ -19,6 +19,7 @@ def create_backups(file_paths):
 
 def restore_backups(translator):
     """Restores files from their .bak backups if they exist."""
+    config.read('path.ini')
     if not config.has_section('pkmn_path') or 'path' not in config['pkmn_path']:
         dpg.set_value("status_text", translator.get_text('destination_folder_not_set'))
         return
@@ -188,6 +189,7 @@ def insert_overworld(overworld_name, width, height, reflection_palette_tag, size
         f.write(f'\t$(GFX) $< $@ -mwidth {width//8} -mheight {height//8}\n')
 
 def overworld_exists(overworld_name):
+    config.read('path.ini')
     base_path = config['pkmn_path']['path']
     defines_file = f"{base_path}/include/constants/event_objects.h"
     search_string = f"#define OBJ_EVENT_GFX_{overworld_name.upper()}"
@@ -201,6 +203,7 @@ def overworld_exists(overworld_name):
 
 def get_custom_overworlds():
     """Scans the event_objects.h file to find overworld definitions."""
+    config.read('path.ini')
     overworlds = []
     base_path = config['pkmn_path'].get('path', '')
     if not base_path:
@@ -313,7 +316,12 @@ def _remove_block_from_file(file_path, start_str, end_str="}};"):
         new_lines = []
         in_block = False
         found = False
+        skip_next_empty = False
         for line in lines:
+            if skip_next_empty:
+                skip_next_empty = False
+                if line.strip() == "":
+                    continue
             if not in_block and start_str in line:
                 in_block = True
                 found = True
@@ -323,6 +331,7 @@ def _remove_block_from_file(file_path, start_str, end_str="}};"):
                 continue
             if in_block and end_str in line:
                 in_block = False
+                skip_next_empty = True
                 continue
             if not in_block:
                 new_lines.append(line)
@@ -333,6 +342,103 @@ def _remove_block_from_file(file_path, start_str, end_str="}};"):
     except FileNotFoundError:
         pass
 
+import re
+
+def find_default_overworld(base_path, exclude_name):
+    """
+    Finds a valid default overworld define from event_objects.h.
+    Prefer 'OBJ_EVENT_GFX_LITTLE_BOY' or 'OBJ_EVENT_GFX_BOY_1'.
+    """
+    defines_file = os.path.join(base_path, "include", "constants", "event_objects.h")
+    candidates = ["OBJ_EVENT_GFX_LITTLE_BOY", "OBJ_EVENT_GFX_BOY_1", "OBJ_EVENT_GFX_VAR_0"]
+    
+    try:
+        with open(defines_file, 'r', encoding='utf-8') as f:
+            content = f.read()
+            
+        for cand in candidates:
+            if f"#define {cand}" in content:
+                return cand
+        
+        # If preferred not found, grab the first valid OBJ_EVENT_GFX_ define
+        matches = re.findall(r'#define (OBJ_EVENT_GFX_\w+)', content)
+        exclude_define = f"OBJ_EVENT_GFX_{exclude_name.upper()}"
+        for match in matches:
+            if match != exclude_define:
+                return match
+                
+    except Exception as e:
+        print(f"Warning: Could not find default overworld: {e}")
+    
+    return "OBJ_EVENT_GFX_VAR_0" # Ultimate fallback
+
+def replace_map_references(base_path, deleted_name, replacement_define):
+    """
+    Scans data/maps for map.json and events.inc and replaces the deleted overworld define.
+    """
+    maps_dir = os.path.join(base_path, "data", "maps")
+    target_define = f"OBJ_EVENT_GFX_{deleted_name.upper()}"
+    
+    if not os.path.exists(maps_dir):
+        return 0
+
+    count = 0
+    # Walk through all map directories
+    for root, dirs, files in os.walk(maps_dir):
+        for file in files:
+            if file in ["map.json", "events.inc"]:
+                file_path = os.path.join(root, file)
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                    
+                    if target_define in content:
+                        # Replace word boundary to ensure exact match
+                        # Using simple string replace might be safer if boundaries are known, 
+                        # but regex is better to avoid partial matches (e.g. OBJ_EVENT_GFX_NAME_TWO)
+                        # However, for map.json/inc, boundaries are usually quotes or commas.
+                        # Let's use regex for safety.
+                        pattern = r'\b' + re.escape(target_define) + r'\b'
+                        if re.search(pattern, content):
+                            new_content = re.sub(pattern, replacement_define, content)
+                            with open(file_path, 'w', encoding='utf-8') as f:
+                                f.write(new_content)
+                            count += 1
+                except Exception as e:
+                    print(f"Error processing {file_path}: {e}")
+    return count
+
+def _get_cased_overworld_name(base_path, overworld_name):
+    """
+    Attempts to find the exact casing of the overworld name as used in
+    object_event_graphics.h (e.g. gObjectEventPic_Name).
+    Returns the found name (with case) or the original if not found.
+    """
+    object_events_file = f"{base_path}/src/data/object_events/object_event_graphics.h"
+    try:
+        with open(object_events_file, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+        
+        lower_name = overworld_name.lower()
+        search_prefix = "const u32 gObjectEventPic_"
+        
+        for line in lines:
+            if search_prefix in line:
+                # expected line: const u32 gObjectEventPic_Name[] = ...
+                # Extract "Name"
+                parts = line.split(search_prefix)
+                if len(parts) > 1:
+                    # content after prefix: Name[] = ...
+                    rest = parts[1]
+                    if "[]" in rest:
+                        found_name = rest.split("[]")[0]
+                        if found_name.lower() == lower_name:
+                            return found_name
+    except FileNotFoundError:
+        pass
+    
+    return overworld_name
+
 def delete_overworld(overworld_name, translator):
     """Main function to delete an overworld and all its references."""
     try:
@@ -341,6 +447,17 @@ def delete_overworld(overworld_name, translator):
             return
 
         base_path = config['pkmn_path']['path']
+        
+        # Replace references in maps
+        default_ow = find_default_overworld(base_path, overworld_name)
+        replaced_count = replace_map_references(base_path, overworld_name, default_ow)
+
+        # Resolve the correct casing used in the C files
+        cased_overworld_name = _get_cased_overworld_name(base_path, overworld_name)
+        
+        # Use cased_overworld_name for code references, 
+        # but KEEP uppercase for defines (as they are always UPPER).
+        
         project_version = config['pkmn_path'].get('project_version', 'Pokeemerald')
         dynamic_pal_system = config['pkmn_path'].get('dynamic_pal_system', 'False')
 
@@ -352,42 +469,52 @@ def delete_overworld(overworld_name, translator):
         movement_file = f"{base_path}/src/event_object_movement.c"
         spritesheet_rules_file = f"{base_path}/spritesheet_rules.mk"
 
+        # Image files to delete
+        image_files = [
+            f"{base_path}/graphics/object_events/pics/people/{cased_overworld_name}.png",
+            f"{base_path}/graphics/object_events/pics/people/{cased_overworld_name}.4bpp",
+            f"{base_path}/graphics/object_events/pics/people/{cased_overworld_name}.gbapal"
+        ]
+
         # Create backups before modification
         create_backups([
             defines_file, object_events_file, pic_tables_file, 
             graphics_info_file, pointers_file, movement_file, spritesheet_rules_file
         ])
 
-        defines_to_remove = [f"OBJ_EVENT_GFX_{overworld_name.upper()}"]
-        if project_version == 'Poke-expansion' or dynamic_pal_system == 'True':
-            defines_to_remove.append(f"OBJ_EVENT_PAL_TAG_{overworld_name.upper()}")
+        defines_to_remove = [
+            f"OBJ_EVENT_GFX_{overworld_name.upper()}",
+            f"OBJ_EVENT_PAL_TAG_{overworld_name.upper()}"
+        ]
         _remove_lines_from_file(defines_file, defines_to_remove)
 
-        incbins_to_remove = [f"gObjectEventPic_{overworld_name}[]", f"gObjectEventPal_{overworld_name}[]"]
+        incbins_to_remove = [f"gObjectEventPic_{cased_overworld_name}[]", f"gObjectEventPal_{cased_overworld_name}[]"]
         _remove_lines_from_file(object_events_file, incbins_to_remove)
 
-        _remove_block_from_file(pic_tables_file, f"sPicTable_{overworld_name}[]")
-        _remove_block_from_file(graphics_info_file, f"gObjectEventGraphicsInfo_{overworld_name}")
+        _remove_block_from_file(pic_tables_file, f"sPicTable_{cased_overworld_name}[]", end_str="};")
+        _remove_block_from_file(graphics_info_file, f"gObjectEventGraphicsInfo_{cased_overworld_name}", end_str="};")
 
         pointers_to_remove = [
-            f"gObjectEventGraphicsInfo_{overworld_name};",
-            f"[OBJ_EVENT_GFX_{overworld_name.upper()}] = &gObjectEventGraphicsInfo_{overworld_name},"
+            f"gObjectEventGraphicsInfo_{cased_overworld_name}",
+            f"[OBJ_EVENT_GFX_{overworld_name.upper()}]"
         ]
         _remove_lines_from_file(pointers_file, pointers_to_remove)
 
-        if dynamic_pal_system == 'True' or project_version == 'Poke-expansion':
-            _remove_lines_from_file(movement_file, [f"gObjectEventPal_{overworld_name}"])
+        _remove_lines_from_file(movement_file, [f"gObjectEventPal_{cased_overworld_name}"])
 
         with open(spritesheet_rules_file, 'r', encoding='utf-8') as f:
             lines = f.readlines()
         new_lines = []
         skip_next = False
+        target_rule = f"/{overworld_name}.4bpp:".lower()
         for line in lines:
             if skip_next:
                 skip_next = False
                 continue
-            if f"/{overworld_name}.4bpp:" in line:
+            if target_rule in line.lower():
                 skip_next = True
+                if new_lines and new_lines[-1].strip() == "":
+                    new_lines.pop()
                 continue
             new_lines.append(line)
         with open(spritesheet_rules_file, 'w', encoding='utf-8') as f:
@@ -395,7 +522,15 @@ def delete_overworld(overworld_name, translator):
 
         defines.update_num_obj_event_gfx(increment=False)
 
-        dpg.set_value("status_text", translator.get_text('delete_success').format(name=overworld_name))
+        # Remove image files
+        for img_file in image_files:
+            if os.path.exists(img_file):
+                try:
+                    os.remove(img_file)
+                except Exception as e:
+                    print(f"Warning: Could not remove {img_file}: {e}")
+
+        dpg.set_value("status_text", translator.get_text('delete_success').format(name=cased_overworld_name) + (f"\nReplaced in {replaced_count} maps with {default_ow}." if replaced_count > 0 else ""))
 
     except Exception as e:
         dpg.set_value("status_text", translator.get_text('delete_error').format(name=overworld_name, error=e))

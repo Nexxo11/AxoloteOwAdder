@@ -88,29 +88,44 @@ def update_num_obj_event_gfx(increment=True):
     except FileNotFoundError:
         return -1
 
+    # Find the highest ID among all OBJ_EVENT_GFX_ defines
+    max_id = 0
     num_gfx_line_index = -1
-    current_value = -1
     
     for i, line in enumerate(lines):
-        if line.strip().startswith("#define NUM_OBJ_EVENT_GFX"):
+        line_strip = line.strip()
+        if line_strip.startswith("#define NUM_OBJ_EVENT_GFX"):
             num_gfx_line_index = i
-            # Extract the current number using split
-            parts = line.split()
+            continue
+            
+        if line_strip.startswith("#define OBJ_EVENT_GFX_"):
+            parts = line_strip.split()
             if len(parts) >= 3:
                 try:
-                    # Clean potential comments or extra text in the line
-                    val_str = parts[2].strip()
-                    current_value = int(val_str)
+                    val = int(parts[2])
+                    if val > max_id:
+                        max_id = val
                 except ValueError:
                     pass
-            break
 
-    new_value = -1
-    if num_gfx_line_index != -1 and current_value != -1:
-        new_value = current_value + 1 if increment else current_value - 1
-        # Replace the value in the line, preserving the rest of the line (like spacing/comments)
-        import re
-        lines[num_gfx_line_index] = re.sub(r'\b' + str(current_value) + r'\b', str(new_value), lines[num_gfx_line_index])
+    # The new NUM_OBJ_EVENT_GFX should be max_id + 1
+    new_value = max_id + 1
+
+    if num_gfx_line_index != -1:
+        # Update the line
+        current_line = lines[num_gfx_line_index]
+        parts = current_line.split()
+        if len(parts) >= 3:
+            # Reconstruct line preserving possible comments? 
+            # Usually it's just "#define NUM_OBJ_EVENT_GFX Value"
+            # But let's safe replace just the number
+            import re
+            try:
+                current_val = int(parts[2])
+                lines[num_gfx_line_index] = re.sub(r'\b' + str(current_val) + r'\b', str(new_value), current_line, count=1)
+            except ValueError:
+                # Fallback if parsing failed
+                lines[num_gfx_line_index] = f"#define NUM_OBJ_EVENT_GFX {new_value}\n"
         
         with open(file_path, 'w', encoding='utf-8') as file:
             file.writelines(lines)
