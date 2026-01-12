@@ -910,10 +910,6 @@ def _delete_overworld_task(overworld_name, translator):
 
         defines.update_num_obj_event_gfx(increment=False)
 
-
-
-        # Remove image files
-
         for img_file in image_files:
 
             if os.path.exists(img_file):
@@ -960,22 +956,12 @@ def _delete_overworld_task(overworld_name, translator):
 
 def delete_overworld(overworld_name, translator):
 
-    """Main function to delete an overworld and all its references."""
-
     overworld_name = overworld_name.strip()
-
-    
-
-    # Create a modal for loading status
 
     with dpg.window(label="Status", modal=True, show=True, tag="loading_modal", width=400, height=120, no_close=True):
 
         dpg.add_text(translator.get_text('processing_maps') if hasattr(translator, 'get_text') else "Processing maps and references...", tag="loading_text")
 
         dpg.add_progress_bar(tag="progress_bar", default_value=0.0, width=380)
-
-
-
-    # Start deletion in a separate thread to keep UI responsive
 
     threading.Thread(target=_delete_overworld_task, args=(overworld_name, translator), daemon=True).start()
