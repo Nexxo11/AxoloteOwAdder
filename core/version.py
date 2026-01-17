@@ -6,7 +6,7 @@ import re
 def verify_version(translator):
     url = "https://raw.githubusercontent.com/Nexxo11/AxoloteOwAdder/main/ver.txt"
     local_version_path = 'ver.txt'
-    with open(local_version_path, 'r') as file:
+    with open(local_version_path, 'r', encoding='utf-8') as file:
         local_version = file.read().strip()
     response = requests.get(url)
     github_version = response.text.strip()

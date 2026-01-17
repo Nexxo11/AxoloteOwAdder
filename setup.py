@@ -1,7 +1,7 @@
 from cx_Freeze import setup, Executable
 import sys
 
-with open("ver.txt", "r") as f:
+with open("ver.txt", "r", encoding='utf-8') as f:
     version = f.read().strip()
 
 build_exe_options = {

@@ -1,5 +1,5 @@
 def insert_after_line_number(filename, line_number, insert_text):
-    with open(filename, 'r') as f:
+    with open(filename, 'r', encoding='utf-8') as f:
         lines = f.readlines()
     
     if line_number < len(lines):
@@ -7,11 +7,11 @@ def insert_after_line_number(filename, line_number, insert_text):
     else:
         lines.append(insert_text + '\n')
 
-    with open(filename, 'w') as f:
+    with open(filename, 'w', encoding='utf-8') as f:
         f.writelines(lines)
 
 def insert_line_in_structure(filename, structure_name, insert_text, insert_position=None):
-    with open(filename, 'r') as f:
+    with open(filename, 'r', encoding='utf-8') as f:
         lines = f.readlines()
 
     inside_structure = False
@@ -41,6 +41,6 @@ def insert_line_in_structure(filename, structure_name, insert_text, insert_posit
                 lines.insert(structure_start_index + insert_position + 1, " " * indent_level + insert_text + '\n')
                 break
 
-    with open(filename, 'w') as f:
+    with open(filename, 'w', encoding='utf-8') as f:
         f.writelines(lines)
 

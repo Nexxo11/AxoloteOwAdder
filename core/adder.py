@@ -114,7 +114,7 @@ def insert_overworld(overworld_name, width, height, reflection_palette_tag, size
         project_version = 'Poke-expansion'
         dynamic_pal_system = 'True'
 
-    with open(defines_file, 'r') as f:
+    with open(defines_file, 'r', encoding='utf-8') as f:
         lines = f.readlines()
 
     endif_index = -1
@@ -142,19 +142,19 @@ def insert_overworld(overworld_name, width, height, reflection_palette_tag, size
         elif project_version == 'Pokeemerald' and dynamic_pal_system == 'False':
             lines.insert(endif_index, f'#define OBJ_EVENT_GFX_{overworld_name.upper()} {next_define_id}\n')
 
-    with open(defines_file, 'w') as f:
+    with open(defines_file, 'w', encoding='utf-8') as f:
         f.writelines(lines)
 
-    with open(object_events_file, 'a') as f:
+    with open(object_events_file, 'a', encoding='utf-8') as f:
         f.write(f'const u32 gObjectEventPic_{overworld_name}[] = INCBIN_U32("graphics/object_events/pics/people/{overworld_name}.4bpp");\n')
         if dynamic_pal_system == 'True' or project_version == 'Poke-expansion':
             f.write(f'const u16 gObjectEventPal_{overworld_name}[] = INCBIN_U16("graphics/object_events/pics/people/{overworld_name}.gbapal");\n')
 
     frames = "\n".join([f'    overworld_frame(gObjectEventPic_{overworld_name}, {width//8}, {height//8}, {i}),' for i in range(frame_num)])
-    with open(pic_tables_file, 'a') as f:
+    with open(pic_tables_file, 'a', encoding='utf-8') as f:
                 f.write(f'\nstatic const struct SpriteFrameImage sPicTable_{overworld_name}[] = {{{frames}}};')
 
-    with open(graphics_info_file, 'a') as f:
+    with open(graphics_info_file, 'a', encoding='utf-8') as f:
         if project_version == 'Poke-expansion':
             write_graphics_info(
                 f, overworld_name, f'OBJ_EVENT_PAL_TAG_{overworld_name.upper()}', reflection_palette_tag,
@@ -183,7 +183,7 @@ def insert_overworld(overworld_name, width, height, reflection_palette_tag, size
     #else:
     #    insert_line_in_structure(movement_file, 'static const struct SpritePalette sObjectEventSpritePalettes[]', f'\t{{gObjectEventPal_{pal_tag.capitalize()}, OBJ_EVENT_PAL_TAG_{pal_tag.upper()}}},')
 
-    with open(spritesheet_rules_file, 'a') as f:
+    with open(spritesheet_rules_file, 'a', encoding='utf-8') as f:
         f.write(f'\n$(OBJEVENTGFXDIR)/people/{overworld_name}.4bpp: %.4bpp: %.png\n')
         f.write(f'\t$(GFX) $< $@ -mwidth {width//8} -mheight {height//8}\n')
 
@@ -273,7 +273,7 @@ def insert_overworld_gui(translator):
                 dynamic_pal_system = config['pkmn_path']['dynamic_pal_system']
                 project_version = config['pkmn_path']['project_version']
 
-        with open('path.ini', 'w') as configfile:
+        with open('path.ini', 'w', encoding='utf-8') as configfile:
             config.write(configfile)
 
         if (width == 16 and height == 64) or (width == 64 and height == 16):

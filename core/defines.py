@@ -6,7 +6,7 @@ config.read('path.ini')
 define_pal_emerald_hex_id = 0
 
 def get_next_define_number(file_path):
-    with open(file_path, 'r') as file:
+    with open(file_path, 'r', encoding='utf-8') as file:
         lines = file.readlines()
     
     last_define = None
@@ -28,7 +28,7 @@ def get_next_define_number(file_path):
         return 1
 
 def get_next_pal_tag_define_number(file_path):
-    with open(file_path, 'r') as file:
+    with open(file_path, 'r', encoding='utf-8') as file:
         lines = file.readlines()
     
     last_define = None
@@ -55,7 +55,7 @@ def pokeemerald_pal_define(file_path, overworld_name):
     global define_pal_emerald_hex_id
     define_pal_emerald_hex_id = next_define_hex_id
 
-    with open(file_path, 'r+') as f:
+    with open(file_path, 'r+', encoding='utf-8') as f:
         lines = f.readlines()
 
     endif_index = -1
@@ -75,7 +75,7 @@ def pokeemerald_pal_define(file_path, overworld_name):
         new_line = f"#define OBJ_EVENT_PAL_TAG_{overworld_name.upper()} 0x{next_define_hex_id:04X}\n"
         lines.insert(endif_index, new_line)
 
-    with open(file_path, 'w') as f:
+    with open(file_path, 'w', encoding='utf-8') as f:
         f.writelines(lines)
 
 def update_num_obj_event_gfx(increment=True):

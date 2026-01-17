@@ -19,7 +19,7 @@ def select_folder(translator):
         config['pkmn_path']['path'] = folder_selected
         
         try:
-            with open('path.ini', 'w') as configfile:
+            with open('path.ini', 'w', encoding='utf-8') as configfile:
                 config.write(configfile)
             dpg.set_value("folder_path_text", f"{translator.get_text('selected_path')}{folder_selected}")
             
@@ -36,7 +36,7 @@ def select_folder(translator):
 def complete_config(translator):
     selected_project = dpg.get_value("project_setting_ver")
     dynamic_pal = dpg.get_value("project_setting_pal")
-    with open('path.ini', 'w') as configfile:
+    with open('path.ini', 'w', encoding='utf-8') as configfile:
         config['pkmn_path']['project_version'] = selected_project
         config['pkmn_path']['dynamic_pal_system'] = str(dynamic_pal)
         config.write(configfile)
