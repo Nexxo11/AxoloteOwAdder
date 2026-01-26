@@ -1,6 +1,6 @@
 # AxoloteOwAdder
 
-![image](https://github.com/user-attachments/assets/afd40f40-25c9-4284-a16e-bf0d9cea5224)
+<img width="529" height="825" alt="image" src="https://github.com/user-attachments/assets/f5044a7c-6432-44d2-aafc-93bb23785cf0" />
 
 A tool for adding and configuring overworld events in Pokeemerald.
 
